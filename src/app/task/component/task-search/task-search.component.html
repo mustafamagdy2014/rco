@@ -1,0 +1,34 @@
+<div class="ui-rtl" dir="rtl">
+  <div style="text-align:left">
+    <button type="button" pButton label="إعداد اجتماع جديد" *ngIf="appService.hasRole('ROLE_COMMITTEE_SECRETARY')" icon="fa fa-file-text" iconPos="left" (click)="router.navigate(['viewMeeting/ '])"></button>
+    <button type="button" pButton icon="fa fa-search" (click)="search()" label="بحث"></button>
+  </div>
+  <div class="ui-g">
+
+
+    <div class="ui-g-3">
+      <h3>حالة الطلب </h3>
+      <p-dropdown [style]="{'width':'100%'}" [options]="rcoLookup['STATUS']" [(ngModel)]="status" optionLabel="nameAr" [filter]="false"
+         filterBy="value.nameAr"></p-dropdown>
+    </div>
+
+    <div class="ui-g-3">
+      <h3>نوع الطلب </h3>
+      <p-dropdown [style]="{'width':'100%'}" [options]="rcoLookup['REQUEST_TYPE']" [(ngModel)]="requestType" optionLabel="nameAr"
+        [filter]="false" filterBy="value.nameAr"></p-dropdown>
+    </div>
+
+    <div class="ui-g-3">
+      <h3>نوع الخدمة </h3>
+      <p-dropdown [style]="{'width':'100%'}" [options]="rcoLookup['SERVICE_TYPE']" [(ngModel)]="serviceType" optionLabel="nameAr"
+        [filter]="false"  filterBy="value.nameAr"></p-dropdown>
+    </div>
+
+    <div class="ui-g-3">
+      <h3>تاريخ الطلب </h3>
+      <!-- <p-calendar dateFormat="yyyy-MM-dd" [(ngModel)]="rangeDates" selectionMode="range" readonlyInput="true" [inline]="false"  [maxDate]="maxDate"
+        selectOtherMonths="true" ></p-calendar> -->
+        <p-calendar  [style]="{'width':'100%'}" [inputStyle]="{'width':'60%'}"  [monthNavigator]="true" dateFormat="yy, MM dd" [maxDate]="maxDate" [(ngModel)]="rangeDates" [showIcon]="true" selectionMode="range" [maxDate]="maxDate" readonlyInput="true"></p-calendar>
+    </div>
+  </div>
+</div>

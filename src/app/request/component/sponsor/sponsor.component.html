@@ -1,0 +1,209 @@
+<p-growl [(value)]="msgs" ></p-growl>
+
+<p-blockUI  [blocked]="blockedSponserPanel">
+        <i class="fa fa-refresh fa-spin  fa-5x" style="position:absolute;top:25%;left:50%"></i>
+    </p-blockUI>
+<p-panel  header="{{header}}" [toggleable]="true" [collapsed]="family?.sponsers.length==0">
+  <p-table  dataKey="cpr" [columns]="cols" [value]="family?.sponsers" selectionMode="single" [(selection)]="selectedSponser" (onRowSelect)="onSponserSelect($event)" [paginator]="true" [rows]="15">
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+
+
+
+    <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns"  >
+        <tr [pSelectableRow]="rowData" [ngClass]="'txt-center'">
+        
+            <td >
+                {{rowData.cpr}}
+            </td>
+            <td>
+              {{rowData.personArabicName||'لا يوجد'}}
+            </td>
+            <td>
+              {{rowData.contact.mobilesms||'لا يوجد'}}
+            </td>
+            <td>
+              {{rowData.contact.mobile||'لا يوجد'}}
+            </td>
+            <td>
+              {{rowData.contact.homeTel||'لا يوجد'}}
+            </td>
+            <td>
+                    <a href="#" [pRowToggler]="rowData">
+                        <i [ngClass]="expanded ? 'fa fa-fw fa-2x fa-chevron-circle-down' : 'fa fa-fw fa-2x fa-rotate-180 fa-chevron-circle-right'"></i>
+                    </a>
+             </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+           
+    
+        <tr [ngClass]="'txt-center'">
+            <td [attr.colspan]="columns.length">
+                <div class="ui-g ui-fluid" style="font-size:16px;padding:20px">
+                    
+                    <div class="ui-g-12 ui-md-12">
+                            <p-card class="accountsTable">
+
+
+                                    <p-table [value]="rowData.accounts" selectionMode="single" [(selection)]="selectedAccount" (onRowSelect)="onAccountSelect(rowData,$event)" >
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th  >اسم البنك</th>
+                                                    <th>رقم الحساب</th>
+                                                    <th>رقم الحساب الدولي</th>
+                                                    
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-account>
+                                                <tr [pSelectableRow]="account" >
+                                                    <td>{{account.bank.nameAr}}</td>
+                                                    <td>{{account.accountNo}}</td>
+                                                    <td>{{account.iban}}</td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="summary" *ngIf="!isViewState" >
+                                                    <div style="text-align:left" >
+                                                            <button pButton icon="fa-plus" id="addAccountBTN" icon="fa-plus"   label="أضف حساب" (click)="showDialogToAddAccount(rowData)"></button>
+                                                       
+                                                    </div>
+                                                </ng-template>
+                                        </p-table>
+                        
+
+
+
+
+
+
+                                </p-card>
+                      
+        
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+
+
+           
+
+
+
+        </ng-template>
+
+    <ng-template pTemplate="summary" let-rowData  *ngIf="!isViewState" >
+        <div>
+            <button id="addSponserBTN" type="button"pButton icon="fa-plus" (click)="showDialogToAddSponser()" label="أضف كفيل"></button>
+        </div>
+    </ng-template>
+    
+  </p-table>
+  <p-dialog header="تفاصيل الكفيل" [(visible)]="displaySponserDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
+    <div class="ui-g ui-fluid" *ngIf="sponser">
+        <div class="ui-g-12">
+            <div class="ui-g-8">
+              <p-inputMask [(ngModel)]="sponser.cpr" mask="999999999" (onComplete)="getPersonCRS(sponser.cpr)"></p-inputMask>
+            </div>
+            <div class="ui-g-4">
+                <label for="vin">الرقم الشخصي</label>
+            </div>
+           
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-8">
+                <input pInputText id="year"  [readonly]="true"  [(ngModel)]="sponser.personArabicName" />
+            </div>
+            <div class="ui-g-4">
+                <label for="year">الاسم</label>
+            </div>
+           
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-8">
+                <p-inputMask mask="99999999" [(ngModel)]="sponser.contact.mobilesms" placeholder="99999999"></p-inputMask>
+            </div>
+            <div class="ui-g-4">
+                <label for="brand">هاتف الرسائل</label>
+            </div>
+           
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-8">
+                <p-inputMask mask="99999999" [(ngModel)]="sponser.contact.mobile" placeholder="99999999"></p-inputMask>
+            </div>
+            <div class="ui-g-4">
+                <label for="color">هاتف نقال</label>
+            </div>
+            
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-8">
+                <input pInputText id="color" [(ngModel)]="sponser.contact.homeTel" />
+            </div>
+          <div class="ui-g-4">
+              <label for="color">هاتف المنزل</label>
+          </div>
+          
+      </div>
+    </div>
+    <p-footer>
+        <div class="sponser-details-btns ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton icon="fa-check" (click)="saveSponser()" label="حفظ"></button>
+            <button type="button" pButton icon="fa-close" (click)="deleteSponser()"  label="{{!newSponser?'مسح':'الغاء'}}"></button>
+            
+        </div>
+    </p-footer>
+</p-dialog>
+<p-dialog header="تفاصيل الحساب" [(visible)]="displayAccountDialog" [contentStyle]="{'overflow':'visible'}" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
+        <div class="ui-g ui-fluid" *ngIf="account">
+        
+            <div class="ui-g-12">
+                <div class="ui-g-8">
+                        <p-dropdown *ngIf="rcoLookup"  [options]="rcoLookup['BANK']" [(ngModel)]="account.bank" optionLabel="nameAr" [style]="{'width':'100%','direction':'rtl'}" [filter]="true" filterBy="value.nameAr"></p-dropdown> 
+                </div>
+                <div class="ui-g-4">
+                    <label for="year">اسم البنك</label>
+                </div>
+               
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-8">
+                        <input type="text"  pInputText  pKeyFilter="pnum" [(ngModel)]="account.accountNo">
+                </div>
+                <div class="ui-g-4">
+                    <label for="brand">رقم الحساب</label>
+                </div>
+               
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-8">
+                    <input pInputText [(ngModel)]="account.iban" [pattern]="IBANPattern" #iban="ngModel">
+
+                        <div *ngIf="iban.errors?.pattern"> 
+                             رقم الحساب الدولي غير صحيح
+                             </div> 
+                  
+                </div>
+                <div class="ui-g-4">
+                    <label for="color">رقم الحساب الدولي</label>
+                </div>
+                
+            </div>
+           
+        </div>
+        <p-footer>
+            <div class="account-buttons-div ui-dialog-buttonpane ui-helper-clearfix">
+                    <button type="button" pButton icon="fa-check"  (click)="saveAccount()" label="حفظ"></button>
+                <button type="button" pButton icon="fa-close" (click)="deleteAccount()"  label="{{!newAccount?'مسح':'الغاء'}}"></button>
+              
+            </div>
+        </p-footer>
+    </p-dialog>
+</p-panel>

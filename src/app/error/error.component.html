@@ -1,0 +1,26 @@
+<div *ngIf="error" class="exception-body" [ngClass]="{accessdenied:error['status']==401||error['status']==400 ,error:error['status']!=401||error['status']!=400}">
+    <div class="exception-panel">
+        <div class="exception-code">
+
+            <div [ngSwitch]="error['status']">
+               
+                <img src="assets/layout/images/exception/400.png" *ngSwitchCase="400">
+                <img src="assets/layout/images/exception/401.svg" *ngSwitchCase="401">
+                <img src="assets/layout/images/exception/404.svg" *ngSwitchCase="404">
+                <img src="assets/layout/images/exception/500.svg"*ngSwitchDefault >
+            
+                
+            </div>
+        </div>
+
+        <div class="exception-detail">
+
+            <div class="exception-icon">
+                <i class="material-icons">close</i>
+            </div>
+            <h1>حدث خطأ بالنظام</h1>
+            
+            {{error|json}}
+        </div>
+    </div>
+  </div>

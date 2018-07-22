@@ -1,0 +1,399 @@
+<p-blockUI  [blocked]="blockedSponserForm">
+    <i class="fa fa-refresh fa-spin  fa-5x" style="position:absolute;top:25%;left:50%"></i>
+</p-blockUI>
+<p-growl [(value)]="msgs" ></p-growl>
+<p-panel  [toggleable]="true" >
+
+<div class="ui-g" >
+  <div class="ui-g-3">
+  </div>
+  <div class="ui-g-6">
+
+    <form [formGroup]="form">
+
+      <div class="ui-g-10">
+        <p-dropdown *ngIf="!sponsershipChangeRequest.id" [style]="{'width':'100%'}" [options]="rcoLookup['TOPIC']" formControlName="topic" optionLabel="nameAr" (onChange)="initReason($event)"></p-dropdown>
+        <input pInputText *ngIf="sponsershipChangeRequest.id" [disabled]="true" [style.width.%]="38" [value]="sponsershipChangeRequest.topic.nameAr" type="text" >
+      </div>
+      <div class="ui-g-2">
+        <label>موضوع البلاغ</label>
+      </div>
+      <ng-container *ngIf="topic">
+
+        <div class="ui-g-10">
+          <p-dropdown *ngIf="!sponsershipChangeRequest.id" [style]="{'width':'100%'}" [options]="topic?.reasons" formControlName="reason" optionLabel="nameAr" (onChange)="reasonChanged($event)"></p-dropdown>
+          <input pInputText *ngIf="sponsershipChangeRequest.id" [disabled]="true" [style.width.%]="38" [value]="sponsershipChangeRequest.reason.nameAr" type="text" >
+        </div>
+        <div class="ui-g-2">
+          <label>السبب</label>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="reason&&reason?.id==17">
+
+          <div class="ui-g-10">
+            <p-dropdown [style]="{'width':'100%'}" [options]="contactOwners" formControlName="contactOwner" (onChange)="showContactInfo($event)"></p-dropdown>
+          </div>
+          <div class="ui-g-2">
+            <label>أختر الشخص</label>
+          </div>
+        </ng-container>
+
+      <ng-container *ngIf="reason&&reason?.id<6">
+        <div class="ui-g-10">
+          <p-calendar formControlName="topicReasonDate" [inline]="false" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1920:2080"></p-calendar>
+        </div>
+        <div class="ui-g-2">
+          <label>تاريخ {{reason?.nameAr}}*</label>
+        </div>
+     
+      </ng-container>
+
+      <ng-container *ngIf="reason&&reason?.id==15">
+        <div class="ui-g-10">
+          <input pInputText formControlName="sponserOldName" [style.width.%]="38">
+        </div>
+        <div class="ui-g-2">
+          <label>اسم الكفيل</label>
+        </div>
+        <div class="ui-g-12">
+          <div class="ui-g-6">
+            <div class="ui-g-8">
+              <p-dropdown [style]="{'width':'100%'}" [options]="rcoLookup['BANK']" optionLabel="nameAr" formControlName="newBankName"></p-dropdown>
+            </div>
+            <div class="ui-g-4">
+              <label>اسم البنك الجديد</label>
+            </div>
+          </div>
+
+          <div class="ui-g-6">
+            <div class="ui-g-8">
+                  <input pInputText formControlName="oldBankName">
+            </div>
+            <div class="ui-g-4">
+              <label>اسم البنك القديم</label>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="ui-g-12">
+
+          <div class="ui-g-6">
+            <div class="ui-g-8">
+              <input pInputText type="text" [ngStyle]="{width:'100%'}" pInputText formControlName="newAccountNo"/>
+            </div>
+            <div class="ui-g-4">
+              <label>رقم الحساب الجديد</label>
+            </div>
+          </div>
+          <div class="ui-g-6">
+            <div class="ui-g-8">
+                <input pInputText formControlName="oldAccountNo">
+            </div>
+            <div class="ui-g-4">
+              <label>رقم الحساب القديم</label>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="ui-g-12">
+
+          <div class="ui-g-6">
+            <div class="ui-g-8">
+              <input pInputText type="text" [ngStyle]="{width:'100%'}" pInputText formControlName="newIBAN" />
+            </div>
+            <div class="ui-g-4">
+              <label>رقم الحساب الدولي الجديد</label>
+            </div>
+            <div class="error-msg" *ngIf="newIBAN.errors && (newIBAN.dirty || newIBAN.touched)" >
+                رقم الحساب الدولي الجديد غير صحيح
+            </div>
+          </div>
+          <div class="ui-g-6">
+            <div class="ui-g-8">
+                <input pInputText formControlName="oldIBAN">
+              </div>
+            <div class="ui-g-4">
+              <label>رقم الحساب الدولي القديم</label>
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+
+
+      </ng-container>
+      <ng-container *ngIf="reason&&reason?.id==16">
+       
+          <div class="ui-g-6">
+              <label>بيانات الكفيل الجديد</label>
+            </div>
+            <div class="ui-g-6">
+             <label> بيانات الكفيل القديم</label>
+            </div>
+    
+              
+        <div class="ui-g-12">
+            <div class="ui-g-6">
+                <div class="ui-g-8">
+                    <input pInputText [ngStyle]="{'width':'100%'}"  formControlName="sponserNewCpr" (keyup)="getPersonCRS(sponserNewCpr.value)" formControlName="sponserNewCpr">
+              </div>
+                  <div class="ui-g-4">
+                    <label>الرقم الشخصي*</label>
+                  </div>
+                  <div class="error-msg" *ngIf="sponserNewCpr.errors && (sponserNewCpr.dirty || sponserNewCpr.touched)" >
+                    <div *ngIf="sponserNewCpr.errors.cannotBeSameSponser; else defaultCprError">  لا يمكن  اى يكون الكفيل نفس الشخص   </div>
+                    <ng-template #defaultCprError>
+                        <div>الرقم الشخصي 9 ارقام</div>
+                    </ng-template>
+                    
+                  </div>
+            </div>
+          <div class="ui-g-6">
+              <div class="ui-g-8">
+                  <input pInputText formControlName="sponserOldCpr">
+                </div>
+                <div class="ui-g-4">
+                  <label>الرقم الشخصي</label>
+                </div>
+          </div>
+         
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-6">
+                <div class="ui-g-8">
+                    <input pInputText [ngStyle]="{'width':'100%'}" formControlName="sponserNewName">
+                </div>
+                  <div class="ui-g-4">
+                    <label>الاسم</label>
+                  </div>
+            </div>
+          <div class="ui-g-6">
+              <div class="ui-g-8">
+                  <input pInputText formControlName="sponserOldName">
+                </div>
+                <div class="ui-g-4">
+                  <label>الاسم</label>
+                </div>
+          </div>
+         
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-6">
+                <div class="ui-g-8">
+                    <p-dropdown [style]="{'width':'100%'}" [options]="rcoLookup['BANK']" formControlName="newBankName" optionLabel="nameAr"></p-dropdown>
+                  </div>
+                  <div class="ui-g-4">
+                    <label>أسم البنك</label>
+                  </div>
+            </div>
+          <div class="ui-g-6">
+              <div class="ui-g-8">
+                  <input pInputText formControlName="oldBankName">
+                </div>
+                <div class="ui-g-4">
+                  <label>أسم البنك</label>
+                </div>
+          </div>
+         
+        </div>
+        <div class="ui-g-12">
+
+            <div class="ui-g-6">
+              <div class="ui-g-8">
+                <input pInputText type="text" [ngStyle]="{width:'100%'}" pInputText formControlName="newAccountNo" />
+              </div>
+              <div class="ui-g-4">
+                <label>رقم الحساب </label>
+              </div>
+            </div>
+            <div class="ui-g-6">
+              <div class="ui-g-8">
+                  <input pInputText formControlName="oldAccountNo">
+              </div>
+              <div class="ui-g-4">
+                <label>رقم الحساب </label>
+              </div>
+  
+            </div>
+  
+          </div>
+          <div class="ui-g-12">
+
+              <div class="ui-g-6">
+                <div class="ui-g-8">
+                  <input pInputText type="text" [ngStyle]="{width:'100%'}" pInputText  formControlName="newIBAN" />
+                </div>
+                <div class="ui-g-4">
+                  <label>رقم الحساب الدولي </label>
+                </div>
+              </div>
+              <div class="ui-g-6">
+                <div class="ui-g-8">
+                    <input pInputText formControlName="oldIBAN">
+                  </div>
+                <div class="ui-g-4">
+                  <label>رقم الحساب الدولي </label>
+                </div>
+    
+              </div>
+    
+            </div>
+            <div class="ui-g-12">
+
+                <div class="ui-g-6">
+                  <div class="ui-g-8">
+                    <input pInputText type="text" [ngStyle]="{width:'100%'}" pInputText  formControlName="newMobileSms" />
+                  </div>
+                  <div class="ui-g-4">
+                    <label>هاتف الرسائل * </label>
+                  </div>
+                             
+                  <div class="error-msg" *ngIf="newMobileSms.errors && (newMobileSms.dirty || newMobileSms.touched)" >
+                      هاتف الرسائل 8 ارقام
+                   </div>
+                </div>
+                <div class="ui-g-6">
+                 
+                        <div class="ui-g-8">
+                            <input pInputText formControlName="oldMobileSms">                            
+                          </div>
+                        <div class="ui-g-4">
+                          <label>هاتف الرسائل  </label>
+                        </div>
+
+             
+                </div>
+      
+              </div>
+              <div class="ui-g-12">
+
+                  <div class="ui-g-6">
+                    <div class="ui-g-8">
+                      <input pInputText type="text" [ngStyle]="{width:'100%'}" pInputText  formControlName="newMobile" />
+                    </div>
+                    <div class="ui-g-4">
+                      <label>هاتف النقال * </label>
+                    </div>
+                    <div class="error-msg" *ngIf="newMobile.errors && (newMobile.dirty || newMobile.touched)" >
+                        هاتف النقال 8 ارقام
+                     </div>
+                  </div>
+                  <div class="ui-g-6">
+                    <div class="ui-g-8">
+                        <input pInputText formControlName="oldMobile">
+                      </div>
+                    <div class="ui-g-4">
+                      <label>هاتف النقال  </label>
+                    </div>
+        
+                  </div>
+        
+                </div>
+                <div class="ui-g-12">
+
+                    <div class="ui-g-6">
+                      <div class="ui-g-8">
+                        <input type="text" [ngStyle]="{width:'100%'}" pInputText  formControlName="newHomeTel" />
+                      </div>
+                      <div class="ui-g-4">
+                        <label>هاتف المنزل  </label>
+                      </div>
+                    </div>
+                    <div class="ui-g-6">
+                      <div class="ui-g-8">
+                          <input pInputText formControlName="oldHomeTel">
+                        </div>
+                      <div class="ui-g-4">
+                        <label>هاتف المنزل  </label>
+                      </div>
+          
+                    </div>
+          
+                  </div>
+      </ng-container>
+      <ng-container  *ngIf="reason&&reason?.id==17">
+          <div class="ui-g-12">
+
+              <div class="ui-g-6">
+                <div class="ui-g-8">
+                  <input  type="text" [ngStyle]="{width:'100%'}" pInputText  formControlName="newMobileSms" />
+                </div>
+                <div class="ui-g-4">
+                  <label>هاتف الرسائل * </label>
+                </div>
+                           
+                <div class="error-msg" *ngIf="newMobileSms.errors && (newMobileSms.dirty || newMobileSms.touched)" >
+                    هاتف الرسائل 8 ارقام
+                 </div>
+              </div>
+              <div class="ui-g-6">
+               
+                      <div class="ui-g-8">
+                          <input pInputText formControlName="oldMobileSms">                            
+                        </div>
+                      <div class="ui-g-4">
+                        <label>هاتف الرسائل  </label>
+                      </div>
+
+           
+              </div>
+    
+            </div>
+            <div class="ui-g-12">
+
+                <div class="ui-g-6">
+                  <div class="ui-g-8">
+                    <input type="text" [ngStyle]="{width:'100%'}" pInputText  formControlName="newMobile" />
+                  </div>
+                  <div class="ui-g-4">
+                    <label>هاتف النقال * </label>
+                  </div>
+                  <div class="error-msg" *ngIf="newMobile.errors && (newMobile.dirty || newMobile.touched)" >
+                      هاتف النقال 8 ارقام
+                   </div>
+                </div>
+                <div class="ui-g-6">
+                  <div class="ui-g-8">
+                      <input formControlName="oldMobile" pInputText>
+                    </div>
+                  <div class="ui-g-4">
+                    <label>هاتف النقال  </label>
+                  </div>
+      
+                </div>
+      
+              </div>
+              <div class="ui-g-12">
+
+                  <div class="ui-g-6">
+                    <div class="ui-g-8">
+                      <input type="text" [ngStyle]="{width:'100%'}" pInputText  formControlName="newHomeTel" />
+                    </div>
+                    <div class="ui-g-4">
+                      <label>هاتف المنزل  </label>
+                    </div>
+                  </div>
+                  <div class="ui-g-6">
+                    <div class="ui-g-8">
+                        <input pInputText formControlName="oldHomeTel">
+                      </div>
+                    <div class="ui-g-4">
+                      <label>هاتف المنزل  </label>
+                    </div>
+        
+                  </div>
+        
+                </div>
+      </ng-container>
+    </form>
+  </div>
+  <div class="ui-g-3">
+  </div>
+</div>
+</p-panel>

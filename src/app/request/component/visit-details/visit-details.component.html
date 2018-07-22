@@ -1,0 +1,130 @@
+<p-growl [(value)]="msgs" [autoZIndex]="false"></p-growl>
+
+<button (click)="save()" pButton icon="fa-save" label="حفظ"></button>
+
+
+<div class="row">
+  <div class="col-xs-12">
+
+    <div *ngFor="let q of questions; let i = index" style="padding: 10px">
+      <h2>{{i + 1}} : {{q.questionAr}}</h2>
+      <div [ngSwitch]="q.questionType.nameEn">
+
+        <div *ngSwitchCase="'radio button'">
+          <div class="QuestionChoise" *ngFor="let option of q.questionOption">
+            <div class="ui-g" style="width:250px;margin-bottom:10px">
+              <div class="ui-g-12">
+                <p-radioButton name="group{{q.id}}" binary="true" [value]="true" label="{{option.optionAr}}" [(ngModel)]="option.Selected"
+                  inputId="group{{q.id}}" (click)="updateSelection(option, q)"></p-radioButton>
+              </div>
+              <input pInputText *ngIf="(option.Selected && option.optionEn=='other')" [(ngModel)]="option.text" placeholder="ادخل خيار جديد"
+              />
+
+            </div>
+          </div>
+
+        </div>
+
+        <div *ngSwitchCase="'multiple choice'">
+
+          <div class="QuestionChoise" *ngFor="let option of q.questionOption">
+            <div class="ui-g-12">
+              <p-radioButton name="chechBox{{q.id}}" [value]="true" label="{{option.optionAr}}" [(ngModel)]="option.Selected" inputId="chechBox{{q.id}}"></p-radioButton>
+            </div>
+          </div>
+
+        </div>
+        <div *ngSwitchCase="'multiple choice, multi-select'">
+
+          <div class="QuestionChoise" *ngFor="let option of q.questionOption">
+            <div class="ui-inputgroup">
+              <div class="ui-g-12">
+                <p-checkbox name="chechBoxM{{q.id}}" [value]="true" label="{{option.optionAr}}" binary="true" [(ngModel)]="option.Selected"
+                  inputId="chechBoxM{{q.id}}"></p-checkbox>
+              </div>
+              <input pInputText *ngIf="(option.Selected && option.optionEn=='other')" [(ngModel)]="option.text" placeholder="ادخل خيار جديد"
+              />
+            </div>
+          </div>
+
+        </div>
+        <div *ngSwitchCase="'true/false, if-false'">
+
+
+          <div class="QuestionChoise" *ngFor="let option of q.questionOption">
+            <div class="ui-g-12">
+              <p-radioButton name="chechBox{{q.id}}" [value]="true" label="{{option.optionAr}}" [(ngModel)]="option.Selected" inputId="chechBox{{q.id}}"
+                (click)="updateSelection(option, q)"></p-radioButton>
+            </div>
+
+
+          </div>
+          <div *ngIf="!hideNoSubOption">
+            {{q.subQuestion.questionAr}}:
+            <br />
+            <div class="QuestionChoise" *ngFor="let option of q.subQuestion.questionOption">
+              <p-checkbox name="chechBox{{q.id}}" [value]="true" label="{{option.optionAr}}" binary="true" [(ngModel)]="option.Selected"
+                inputId="chechBox{{q.id}}"></p-checkbox>
+            </div>
+          </div>
+
+
+        </div>
+
+        <div *ngSwitchCase="'true/false, if-true'">
+
+          <div class="QuestionChoise" *ngFor="let option of q.questionOption">
+            <div class="ui-g-12">
+              <p-radioButton name="chechBox{{q.id}}" [value]="true" label="{{option.optionAr}}" [(ngModel)]="option.Selected" inputId="chechBox{{q.id}}"
+                (click)="updateSelection(option, q)"></p-radioButton>
+            </div>
+          </div>
+
+          <div *ngIf="!hideYesSubOption">
+
+            <div [ngSwitch]="q.subQuestion.questionType.nameEn">
+              <div *ngSwitchCase="'long answer'">
+                <textarea pInputTextarea placeholder="الحد الاقصى المسموح هو 250 حرف" [(ngModel)]="q.text" [cols]="50" [rows]="2" maxlength="250"
+                  autoResize="autoResize">
+									</textarea>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div *ngSwitchCase="'long answer'">
+
+          <textarea id="chechBox{{q.id}}" pInputTextarea placeholder="الحد الاقصى المسموح هو 250 حرف" [(ngModel)]="q.text" [cols]="50"
+            [rows]="5" maxlength="250" autoResize="autoResize"></textarea>
+
+        </div>
+        <div *ngSwitchDefault></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="errorBtn">
+ <!--  <h2>{{errorMsg}} {{qMissed}}</h2> -->
+</div>
+
+<!--Actual visit date-->
+<div class="ui-g-12">
+  <div class="ui-g">
+      <div class="ui-g-12 ui-lg-4">
+          <h3>تاريخ الزيارة </h3>
+          <p-calendar dateFormat="yyyy-MM-dd" [(ngModel)]="visitDate" selectionMode="single" readonlyInput="true" [inline]="false" [showIcon]="true" [maxDate]="maxDate"></p-calendar>
+      </div>
+      <div class="ui-g-12 ui-lg-4">
+          <h3>وقت بداية الزيارة</h3>
+          <p-calendar dateFormat="yyyy-MM-dd" [(ngModel)]="visitStartTime" selectionMode="single" readonlyInput="true" [inline]="false" [showIcon]="true" [timeOnly]="true" [stepMinute]="10" hourFormat="12"></p-calendar>
+      </div>
+      <div class="ui-g-12 ui-lg-4">
+          <h3>وقت نهاية الزيارة</h3>
+          <p-calendar dateFormat="yyyy-MM-dd" [(ngModel)]="visitEndTime" selectionMode="single" readonlyInput="true" [inline]="false" [showIcon]="true" [timeOnly]="true" [stepMinute]="10" hourFormat="12"></p-calendar>
+      </div>
+    </div>
+  </div>
+
+<button (click)="save()" pButton icon="fa-save" label="حفظ"></button>
+

@@ -1,0 +1,36 @@
+<p-blockUI [blocked]="blockedFatherPanel" [target]="fatherPnl">
+    <i class="fa fa-refresh fa-spin  fa-5x" style="position:absolute;top:25%;left:50%"></i>
+</p-blockUI>
+
+<p-panel id="fatherPanel" header="{{header}}" #fatherPnl [toggleable]="true" [style]="{ 'height': '258px'}"> 
+
+  <div  class="ui-g form-group">
+
+    <div class="ui-g-12 ui-md-4">
+      <label>الرقم الشخصي</label>
+    </div>
+    <div class="ui-g-12 ui-md-8">
+    
+      <p-inputMask [disabled]="isViewState||isUpdateState"  [(ngModel)]="father.cpr" mask="999999999" (onComplete)="getPersonCRS(father.cpr)" placeholder="CPR"></p-inputMask>
+    </div>
+
+    <div class="ui-g-12 ui-md-4">
+      <label>الاسم</label>
+    </div>
+    <div class="ui-g-12 ui-md-8">
+      <input [disabled]="true" [(ngModel)]="father.personArabicName" type="text" pInputText  placeholder="">
+    </div>
+
+    <div class="ui-g-12 ui-md-4">
+      <label>تاريخ الوفاة</label>
+    </div>
+    <div class="ui-g-12 ui-md-8">
+      <input [disabled]="true" [(ngModel)]="father.dateOfDeath" type="text"  pInputText  placeholder="">
+    </div>
+    <div class="ui-g-12 ui-md-4">
+      <label>شهيد</label>
+    </div>
+      <div class="ui-g-12 ui-md-8"><p-checkbox [disabled]="isViewState"  binary="true" [(ngModel)]="family.martyr"></p-checkbox></div>
+      
+  </div>
+</p-panel>

@@ -1,0 +1,68 @@
+<div class="ui-g-12">
+
+    <div class="ui-g-1">
+        <p-dropdown [style]="{'width':'100%'}" [options]="rcoLookup['YEAR']" [(ngModel)]="secondYear" optionLabel="nameAr" [filter]="true"
+            [autoWidth]="true" filterBy="value.nameAr"></p-dropdown>
+    </div>
+    <div class="ui-g-2">
+        <label>السنة الثانية</label>
+    </div>
+  
+    <div class="ui-g-1">
+        <p-dropdown [style]="{'width':'100%'}" [options]="rcoLookup['MONTH']" [(ngModel)]="secondMonth" optionLabel="nameAr" [filter]="true"
+            [autoWidth]="true" filterBy="value.nameAr"></p-dropdown>
+    </div>
+    <div class="ui-g-2">
+        <label>الشهر الثاني</label>
+    </div>
+
+  <div class="ui-g-1">
+      <p-dropdown [style]="{'width':'100%'}" [options]="rcoLookup['YEAR']" [(ngModel)]="firstYear" optionLabel="nameAr" [filter]="true"
+          [autoWidth]="true" filterBy="value.nameAr"></p-dropdown>
+  </div>
+  <div class="ui-g-2">
+      <label>السنة الأولى</label>
+  </div>
+
+  <div class="ui-g-1">
+      <p-dropdown [style]="{'width':'100%'}" [options]="rcoLookup['MONTH']" [(ngModel)]="firstMonth" optionLabel="nameAr" [filter]="true"
+          [autoWidth]="true" filterBy="value.nameAr"></p-dropdown>
+  </div>
+  <div class="ui-g-2">
+      <label>الشهر الأول</label>
+  </div>
+
+  <div class="ui-g-12">
+      <div>
+          <button type="button" pButton icon="fa-plus" (click)="getMonthlyDifferencesList()" label="إعداد تقرير الفروقات الشهرية"></button>
+      </div>
+  </div>
+
+  <div class="ui-g-12">
+      <p-table #dt [columns]="cols" [value]="monthlyDifferencesReportList" [paginator]="true" [rows]="15" [exportFilename]="reportName">
+
+          <ng-template pTemplate="header" let-columns>
+              <tr>
+                  <th *ngFor="let col of columns">
+                      {{col.header}}
+                  </th>
+              </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" class="txt-center">
+                  <td *ngFor="let col of columns">
+                      {{rowData[col.field]}}
+                  </td>
+              </tr>
+            </ng-template>
+
+          <ng-template pTemplate="summary" let-rowData>
+              <div>
+                  <button type="button" pButton (click)="export()" label="Export"></button>
+              </div>
+          </ng-template>
+
+      </p-table>
+  </div>
+</div>

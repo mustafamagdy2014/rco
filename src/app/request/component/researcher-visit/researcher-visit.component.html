@@ -1,0 +1,358 @@
+<p-growl [(value)]="msgs"></p-growl>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle" width="425"></p-confirmDialog>
+
+<p-panel  header="{{header2}}" [toggleable]="true">
+<div class="ui-g">
+        <div class="ui-g-12">
+                <div class="ui-g-11">
+                    <p-dropdown (onChange)="visitStatusChanged($event)" [style]="{'width':'200px'}" [options]="rcoLookup['VISIT_STATUS_CREATE']" [(ngModel)]="researcherVisit.visitStatus" optionLabel="nameAr"></p-dropdown>
+                  </div>
+                <div class="ui-g-1">
+                    <label>حالة الزيارة</label>
+                </div>
+                
+            </div>
+
+            <div class="ui-g-12">
+
+
+
+                    <p-table [columns]="cols" [value]="researcherVisitsList" selectionMode="single" [paginator]="false" [rows]="5">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let col of columns">
+                                        {{col.header}}
+                                    </th>
+                                </tr>
+                            </ng-template>
+                          
+                          
+                            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                                  <tr [pSelectableRow]="rowData">
+                                          <td style="text-align: center">
+                                            {{rowIndex+1}} 
+                                          </td>
+                                          <td style="text-align: center">
+                                            {{rowData.nextOfKin.cpr}}
+                                          </td>
+                                          <td style="text-align: center"><button type="text" pButton label="العنوان" (click)="showVisitAddress(rowIndex, $event)"></button></td>
+                                          <td style="text-align: center"> {{rowData.startDate | date:dateFormat }}</td>
+                                          <td style="text-align: center"> من {{rowData.startDate | date:'h:mm a '}} إلى {{rowData.endDate | date:'h:mm a '}}</td>
+                                          <td style="text-align: center"><button type="text" pButton label="تعديل الموعد" (click)="showEditScheduleDialog(rowData)"></button></td>
+                                          <td style="text-align: center">
+                                                <button id="visitDetailsButton" type="text" (click)="showDialog(rowData)" pButton icon="fa-plus"></button>
+                                          </td>
+                                          <td style="text-align: center"><button type="text" pButton label="المرفقات" (click)="showVisitAttachments(rowIndex)"></button></td>
+                                          <td style="text-align: center">{{rowData.visitStatus.nameAr}}</td>
+                                          <td style="text-align: center"><button type="text" pButton label="حذف" (click)="deleteResearcherVisit(rowData)"></button></td>
+                                      </tr>
+                            </ng-template>
+                          </p-table>
+            </div>
+
+</div>
+</p-panel>
+
+<p-overlayPanel #visitAddressPanel>
+    <div class="ui-g">
+        <div class="ui-g-1">طريق</div>
+        <div class="ui-g-1">
+          <input type="text" pInputText [disabled]="true" [value]="selectedResearcherVisit.road"/>
+        </div>
+        <div class="ui-g-1">مجمع</div>
+        <div class="ui-g-1">
+          <input type="text" pInputText [disabled]="true" [value]="selectedResearcherVisit.block"/>
+        </div>
+     
+      
+        <div class="ui-g-1">ألفا</div>
+        <div class="ui-g-1">
+          <input type="text" pInputText [disabled]="true" [value]="selectedResearcherVisit.buildingAlpha"/>
+        </div>
+        <div class="ui-g-1">مبنى</div>
+        <div class="ui-g-1">
+          <input type="text" pInputText [disabled]="true" [value]="selectedResearcherVisit.building"/>
+        </div>
+        <div class="ui-g-1">شقة</div>
+        <div class="ui-g-2">
+          <input type="text" pInputText  [disabled]="true" [value]="selectedResearcherVisit.flat"/>
+        </div>
+      </div>
+</p-overlayPanel>
+<!-- [autoAlign]="true" -->
+<p-dialog #addNewVisitDialog (onHide)=addNewVisitDialogClosed()  header="تفاصيل الزيارة" [contentStyle]="{'overflow':'visible'}" [blockScroll]="true" [(visible)]="displayScheduleVisitDialog"  showEffect="fade" [modal]="true" resizable="true" height="800" width="1700">
+    <div class="ui-g">
+        <div class="ui-g-12">
+                <div class="ui-g-11">
+                    <p-dropdown   [style]="{'width':'200px'}" [disabled]="true" [options]="rcoLookup['VISIT_STATUS_CREATE']" [(ngModel)]="rcoLookup['VISIT_STATUS_CREATE'][1]" optionLabel="nameAr"></p-dropdown>
+                  </div>
+                <div class="ui-g-1">
+                    <label>حالة الزيارة</label>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-11">
+                    <p-dropdown [style]="{'width':'300px'}" [options]="family.nextOfKins" [(ngModel)]="researcherVisit.nextOfKin" optionLabel="personArabicName" (onChange)="nextOfKinChanged($event)"></p-dropdown>
+                </div>
+                <div class="ui-g-1">
+                    <label>عنوان ولي الأمر</label>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div id="address" class="ui-g-12" *ngIf="selectedNextOfKinAddress">
+                    <div class="ui-g-2">
+                        <input type="text" pInputText [disabled]="true" [value]="selectedNextOfKinAddress.flat" />
+                    </div>
+                    <div class="ui-g-1">شقة</div>
+                    <div class="ui-g-1">
+                        <input type="text" pInputText [disabled]="true" [value]="selectedNextOfKinAddress.building" />
+                    </div>
+                    <div class="ui-g-1">مبنى</div>
+                    <div class="ui-g-1">
+                        <input type="text" pInputText [disabled]="true" [value]="selectedNextOfKinAddress.buildingAlpha" />
+                    </div>
+                    <div class="ui-g-1">ألفا</div>
+                    <div class="ui-g-1">
+                        <input type="text" pInputText [disabled]="true" [value]="selectedNextOfKinAddress.block" />
+                    </div>
+                    <div class="ui-g-1">مجمع</div>
+                    <div class="ui-g-1">
+                        <input type="text" pInputText [disabled]="true" [value]="selectedNextOfKinAddress.road" />
+                    </div>
+                    <div class="ui-g-1">طريق</div>
+                    <div class="ui-g-1">العنوان</div>
+                </div>
+            </div>
+            <div id="contact-details" class="ui-g-12">
+                    <h3>بيانات الاتصال</h3>
+                <div class="ui-g-8"></div>
+                <div class="ui-g-1">
+                    <input type="text" pInputText [disabled]="true" [(ngModel)]="researcherVisit.nextOfKin.contact.mobile" />
+                </div>
+                <div class="ui-g-1">رقم الهاتف النقال</div>
+
+                <div class="ui-g-1">
+                    <input type="text" pInputText [disabled]="true" [(ngModel)]="researcherVisit.nextOfKin.contact.homeTel" />
+                </div>
+                <div class="ui-g-1">رقم هاتف المنزل</div>
+            </div>
+            
+            <div class="ui-g-12">
+                <div class="ui-g-12 ui-lg-3"><button type="button" pButton icon="fa-plus" (click)="addResearcherVisit()" label="إضافة زيارة"></button></div>
+
+                <div class="ui-g-12 ui-lg-3 ui-rtl" >
+                    <h4>وقت نهاية الزيارة</h4>
+                    <p-calendar dateFormat="yy, MM dd" [(ngModel)]="visitEndTime" selectionMode="single" readonlyInput="true" [inline]="false" [showIcon]="true"
+                        [timeOnly]="true" [stepMinute]="10" hourFormat="12"></p-calendar>
+                </div>
+
+                <div class="ui-g-12 ui-lg-3">
+                    <h4>وقت بداية الزيارة</h4>
+                    <p-calendar dateFormat="yy, MM dd" [(ngModel)]="visitStartTime" selectionMode="single" readonlyInput="true" [inline]="false" [showIcon]="true"
+                        [timeOnly]="true" [stepMinute]="10" hourFormat="12"></p-calendar>
+                </div>
+
+                <div class="ui-g-12 ui-lg-3 ui-rtl">
+                    <h4>تاريخ الزيارة </h4>
+                    <p-calendar dateFormat="yy, MM dd" [(ngModel)]="visitDate" selectionMode="single" readonlyInput="true" [inline]="false" [showIcon]="true" [minDate]="minDate"></p-calendar>
+                </div>
+            </div>
+
+
+            <div class="ui-g-12">
+
+                <p-table [columns]="addVisitCols" [value]="researcherVisitsList"    [paginator]="true" [rows]="5" [autoLayout]="true">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns">
+                                {{col.header}}
+                            </th>
+                        </tr>
+                    </ng-template>
+                  
+                  
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                          <tr [pSelectableRow]="rowData" [ngClass]="'txt-center'">
+                                  <td style="text-align: center">
+                                    {{rowIndex+1}} 
+                                  </td>
+                                  <td style="text-align: center">
+                                    {{rowData.nextOfKin.cpr}}
+                                  </td>
+                                  <td style="text-align: center"><button type="text" pButton label="العنوان" (click)="showVisitAddress(rowIndex, $event)"></button></td>
+                                  <td style="text-align: center"> {{rowData.startDate | date:dateFormat }}</td>
+                                  <td style="text-align: center"> من {{rowData.startDate | date:'h:mm a '}} إلى {{rowData.endDate | date:'h:mm a '}}</td>
+                                  <td style="text-align: center">{{rowData.visitStatus.nameAr}}</td>
+                              </tr>
+                    </ng-template>
+                  </p-table>
+
+
+            </div>
+
+</div>
+</p-dialog>
+
+
+<p-dialog *ngIf="selectedResearcherVisit" #editVisitTimeDialog [autoAlign]="true" header="تعديل موعد الزيارة" [contentStyle]="{'overflow':'visible'}" [(visible)]="displayEditScheduleVisitDialog" [responsive]="true" showEffect="fade" [modal]="true" resizable="false" width="1700">
+    <div class="ui-g">
+        <div class="ui-g-12">
+                <div class="ui-g-8">
+                    <p-dropdown   [style]="{'width':'200px'}" [disabled]="true" [options]="rcoLookup['VISIT_STATUS']" [(ngModel)]="selectedResearcherVisit.visitStatus" optionLabel="nameAr"></p-dropdown>
+                  </div>
+                <div class="ui-g-4">
+                    <label>حالة الزيارة</label>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-8">
+                    <p-dropdown [style]="{'width':'200px'}" [disabled]="true" [options]="selectedResearcherVisit.nextOfKinsList" [(ngModel)]="selectedResearcherVisit.nextOfKin" optionLabel="personArabicName"></p-dropdown>
+                </div>
+                <div class="ui-g-4">
+                    <label>عنوان ولي الأمر</label>
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="ui-g-1">
+                    <input type="text" pInputText [disabled]="true" [value]="selectedResearcherVisit.flat" />
+                </div>
+                <div class="ui-g-1">شقة</div>
+                <div class="ui-g-1">
+                    <input type="text" pInputText [disabled]="true" [value]="selectedResearcherVisit.building" />
+                </div>
+                <div class="ui-g-1">مبنى</div>
+                <div class="ui-g-1">
+                    <input type="text" pInputText [disabled]="true" [value]="selectedResearcherVisit.buildingAlpha" />
+                </div>
+                <div class="ui-g-1">ألفا</div>
+                <div class="ui-g-1">
+                    <input type="text" pInputText [disabled]="true" [value]="selectedResearcherVisit.block" />
+                </div>
+                <div class="ui-g-1">مجمع</div>
+                <div class="ui-g-1">
+                    <input type="text" pInputText [disabled]="true" [value]="selectedResearcherVisit.road" />
+                </div>
+                <div class="ui-g-1">طريق</div>
+                <div class="ui-g-2">العنوان</div>
+            </div>
+
+
+            <div class="ui-g-12">
+                <div class="ui-g-2">
+                    <input type="text" pInputText [disabled]="true" [(ngModel)]="selectedResearcherVisit.nextOfKin.contact.mobile" />
+                </div>
+                <div class="ui-g-2">رقم الهاتف النقال</div>
+            
+                <div class="ui-g-2">
+                    <input type="text" pInputText [disabled]="true" [(ngModel)]="selectedResearcherVisit.nextOfKin.contact.homeTel" />
+                </div>
+                <div class="ui-g-2">رقم هاتف المنزل</div>
+                <div class="ui-g-4">بيانات الاتصال</div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="ui-g-1">
+                    <input type="text" pInputText [disabled]="true" [ngModel]="selectedResearcherVisit.endDate | date:'h:mm a'" />
+                </div>
+                <div class="ui-g-2">وقت نهاية الزيارة</div>
+            
+                <div class="ui-g-1">
+                    <input type="text" pInputText [disabled]="true" [ngModel]="selectedResearcherVisit.startDate | date:'h:mm a'" />
+                </div>
+                <div class="ui-g-2">وقت بداية الزيارة</div>
+            
+                <div class="ui-g-1">
+                    <input type="text" pInputText [disabled]="true" [ngModel]="selectedResearcherVisit.startDate | date: 'yyyy-MM-dd'" />
+                </div>
+                <div class="ui-g-2">تاريخ الزيارة</div>
+                <div class="ui-g-3">الموعد السابق</div>
+            </div>
+
+
+
+
+                
+
+            <div class="ui-g-12">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-lg-3">
+                        <h4>تاريخ الزيارة </h4>
+                        <p-calendar dateFormat="yy, MM dd" [(ngModel)]="visitDateUpdate" selectionMode="single" readonlyInput="true" [inline]="false" [showIcon]="true" [minDate]="minDate"></p-calendar>
+                    </div>
+                    <div class="ui-g-12 ui-lg-3">
+                        <h4>وقت بداية الزيارة</h4>
+                        <p-calendar dateFormat="yy, MM dd" [(ngModel)]="visitStartTimeUpdate" selectionMode="single" readonlyInput="true" [inline]="false" [showIcon]="true"
+                            [timeOnly]="true" [stepMinute]="10" hourFormat="12"></p-calendar>
+                    </div>
+                    <div class="ui-g-12 ui-lg-3">
+                        <h4>وقت نهاية الزيارة</h4>
+                        <p-calendar dateFormat="yy, MM dd" [(ngModel)]="visitEndTimeUpdate" selectionMode="single" readonlyInput="true" [inline]="false" [showIcon]="true"
+                            [timeOnly]="true" [stepMinute]="10" hourFormat="12"></p-calendar>
+                    </div>
+
+                    <div class="ui-g-12 ui-lg-3"><button type="button" pButton icon="fa-plus" (click)="updateVisitDate()" label="تعديل الموعد"></button></div>
+            </div>
+        </div>
+
+</div>
+</p-dialog>
+
+<p-dialog #attachmentsDialog [autoAlign]="true" header="مرفقات الزيارة" [contentStyle]="{'overflow':'visible'}" [(visible)]="displayVisitAttachmentsDialog" [responsive]="true" showEffect="fade" [modal]="true" resizable="false" width="600">
+        <p-table [columns]="attachmentsCols" [value]="selectedResearcherVisit.attachments" [paginator]="true" [rows]="5">
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngFor="let col of columns">
+                      {{col.header}}
+                    </th>
+                  </tr>
+                </ng-template>
+            
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                  <tr [pSelectableRow]="rowData" style="text-align: center">
+                    <td>
+                      <a (click)="download(rowData)">{{rowData.fileName}}</a>
+                    </td>
+                    <td style="text-align: center">
+                      {{rowData.fileSize}}
+                    </td>
+                    <td style="text-align: center">
+                      <i class="fa fa-trash-o" style="font-size:24px;color:red" (click)="deleteAttachment(rowData)"></i>
+                    </td>
+                  </tr>
+                </ng-template>
+            
+                <ng-template pTemplate="summary" let-rowData>
+                  <div>
+                    <button type="button" pButton icon="fa-plus" (click)="showAddAttachmentDialog()" label="أضف مرفق"></button>
+                  </div>
+                </ng-template>
+              </p-table>
+</p-dialog>
+
+<p-dialog header="إضافة مرفق" [contentStyle]="{'overflow':'visible'}" [(visible)]="displayAddAttachmentDialog" [responsive]="true" showEffect="fade"
+    [modal]="true" resizable="true" width="700">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <div class="ui-g-9">
+                <p-fileUpload #visitAttachmentUploader name="visitAttachment" mode="advanced" (onBeforeSend)="updateUploadRequest($event)" (onUpload)=" handleVisitAttachmentUpload($event)" url="{{uploadURL}}" [showUploadButton]="true" [uploadLabel]="'تحميل الملف'" [chooseLabel]="'أضف الملف'" [showCancelButton]="false"  maxFileSize="1000000">
+                </p-fileUpload>
+        </div>
+        <div class="ui-g-3">
+          <label for="brand">المرفقات</label>
+        </div>
+      </div>
+    </div>
+  </p-dialog>
+
+
+  <div class="ui-rtl" dir="rtl">
+
+        <p-dialog modal="true" [autoAlign]="true" focusOnShow="false"  header="تفاصيل الزيارة" [(visible)]="displayQ"
+          [width]="800" (onHide)="refreshResearcherVisits()">
+          <button (click)="displayQ=false" pButton icon="fa-undo" label="إلغاء"></button>
+          <app-visit-details  *ngIf="family.id && displayQ && visitId" [plannedVisitDate]="plannedVisitDate" [plannedVisitEndTime]="plannedVisitEndTime" [plannedVisitStartTime]="plannedVisitStartTime" [visitId]="visitId" [family]="family"></app-visit-details>
+          <button (click)="displayQ=false" pButton icon="fa-undo" label="إلغاء"></button>
+        </p-dialog>
+    
+</div>

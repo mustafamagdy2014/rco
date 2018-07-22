@@ -1,0 +1,21 @@
+<p-panel  header="{{header}}" [toggleable]="true" >
+  <!--   <p-dropdown  [style]="{'width':'30%'}"  [options]="assigneeDetails" [(ngModel)]="sponsershipRequest.assigneeDetails" filterBy="displayName" filter="true" optionLabel="displayName"> </p-dropdown>
+    {{sponsershipRequest.assigneeDetails?.username}} -->
+
+<!--     <div id="chartdiv" [style.width.%]="100" [style.height.px]="500"></div>
+ -->
+
+ <p-dropdown [options]="assigneeDetails" [(ngModel)]="assignee" [style]="{'width':'30%'}" filter="true" optionLabel="displayName">
+    <ng-template let-item pTemplate="selectedItem">
+        <span style="vertical-align:middle">{{item.label}}</span>
+    </ng-template>
+    <ng-template let-assignee pTemplate="item">
+        <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+         <div style="position:absolute;top:1px;left:5px">{{assignee.value.numberOfTasksInProgress|numberSuffex}}</div>
+             <div style="font-size:14px;float:right;margin-top:4px">{{assignee.label}}</div>
+        </div>
+    </ng-template>
+</p-dropdown>
+
+
+</p-panel>

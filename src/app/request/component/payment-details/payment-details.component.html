@@ -1,0 +1,27 @@
+<p-panel  header="{{header}}" [toggleable]="true" [collapsed]="paymentDetailsList?.length==0">
+  <p-table [columns]="cols" [value]="paymentDetailsList" [paginator]="true" [rows]="15">
+   
+   
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+  
+  
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData" class="txt-center">
+            <td>
+              {{rowData.startDate | date:dateFormat }} 
+            </td>
+            <td *ngIf="rowData.finishDate">
+              {{rowData.finishDate | date:dateFormat}}
+            </td>
+            <td *ngIf="!rowData.finishDate">مستمرة</td>
+            <td>
+              {{rowData.amount | currency:' BD ':'symbol':'1.3'}}
+            </td>
+        </tr>
+    </ng-template>

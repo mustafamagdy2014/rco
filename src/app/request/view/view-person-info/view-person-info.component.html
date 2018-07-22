@@ -1,0 +1,138 @@
+<p-messages [(value)]="msgs"></p-messages>
+<p-growl [(value)]="growlMsgs"></p-growl>
+
+<p-blockUI [blocked]="blockedParentPanel">
+    <i class="fa fa-refresh fa-spin  fa-5x" style="position:absolute;top:25%;left:50%"></i>
+</p-blockUI>
+
+    <div class="ui-g  ui-rtl" dir="rtl">
+        <div *ngIf="false" class="ui-g-12 ui-lg-12">
+      
+          <div class="ui-g form-group">
+            <div class="ui-g-12 ui-md-5">
+            </div>
+            <div class="ui-g-12 ui-md-4">
+            </div>
+      
+            <div class="ui-g-12 ui-md-2">
+              <button pButton type="button" label="اعداد بلاغ وارد"></button>
+            </div>
+      
+            <div class="ui-g-12 ui-md-1">
+              <button pButton type="button" label="اغلاق" class="ui-button-warning" (click)="backClicked()"></button>
+            </div>
+      
+          </div>
+      
+        </div>
+      
+        <div class="ui-g-12 ui-lg-12">
+          <family *ngIf="sponsershipRequest.id&&componentManager.familyVisible" [sponsershipRequest]="sponsershipRequest"></family>
+        </div>
+      
+        <div class="ui-g-12 ui-lg-12">
+          <orphan *ngIf="applicant" [applicant]="applicant" [family]="family"></orphan>
+        </div>
+      
+      
+      
+      
+      
+      
+      
+        <div class="ui-g-12 ui-lg-4">
+          <widow #widow [family]="family" [isViewState]="isViewState" [isUpdateState]="isUpdateState" (personRetrievedEvent)="validateParentsMarriageRelationship($event)"></widow>
+        </div>
+      
+        <div class="ui-g-12 ui-lg-4">
+          <!-- Left Side -->
+          <father [family]="family" [isViewState]="isViewState" [isUpdateState]="isUpdateState" (personRetrievedEvent)="validateParentsMarriageRelationship($event)"></father>
+      
+        </div>
+      
+        <div *ngIf="componentManager.applicantVisible" class="ui-g-12 ui-lg-4">
+          <applicant [sponsershipRequest]="sponsershipRequest" [isViewState]="isViewState" [isUpdateState]="isUpdateState"></applicant>
+        </div>
+    
+      
+      
+        <div *ngIf="family.fatherMotherInRelation&&componentManager.nextOfKinVisible" class="ui-g-12 ui-lg-12">
+          <next-of-kin [family]="family" [applicant]="applicant" [isViewState]="isViewState"></next-of-kin>
+        </div>
+      
+        <div *ngIf="family.fatherMotherInRelation&&componentManager.sponsorVisible" class="ui-g-12 ui-lg-12">
+          <sponsor [family]="family" [rcoLookup]="rcoLookup" [applicant]="applicant" [isViewState]="isViewState"></sponsor>
+        </div>
+      
+        <div class="ui-g-12 ui-lg-12">
+      
+          <familymembers *ngIf="family.fatherMotherInRelation&&componentManager.familymembersVisible" [family]="family"></familymembers>
+      
+        </div>
+        <div class="ui-g-12 ui-lg-6">
+          <income *ngIf="family.fatherMotherInRelation&&componentManager.incomeVisible" [family]="family" [rcoLookup]="rcoLookup" [isViewState]="isViewState"></income>
+        </div>
+      
+        <div class="ui-g-12 ui-lg-6">
+          <expense *ngIf="family.fatherMotherInRelation&&componentManager.expenseVisible" [family]="family" [rcoLookup]="rcoLookup" [isViewState]="isViewState"></expense>
+        </div>
+
+        <div class="ui-g-12 ui-lg-12"  *ngIf="componentManager.visitScheduleVisible">
+          <researcher-visit *ngIf="family.fatherMotherInRelation" [family]="family" [rcoLookup]="rcoLookup"></researcher-visit>
+        </div>
+        <div class="ui-g-12 ui-lg-12"  *ngIf="componentManager.visitScheduleVisible">
+          <researcher-recommendation [familyMembers]="family.familyMembers"></researcher-recommendation>
+        </div>
+        <div *ngIf="componentManager.paymentDetailsVisible" class="ui-g-12 ui-lg-12">
+          <payment-details [cpr]="applicant.cpr"></payment-details> 
+        </div>
+      
+        <div *ngIf="family.fatherMotherInRelation&&componentManager.attachmentVisible" class="ui-g-12 ui-lg-12">
+          <attachment [sponsershipRequest]="sponsershipRequest" [isViewState]="isViewState" [rcoLookup]="rcoLookup"></attachment>
+        </div>
+
+        <div *ngIf="family.fatherMotherInRelation&&componentManager.commentVisible" class="ui-g-12 ui-lg-12">
+            <comment [sponsershipRequest]="sponsershipRequest" [isViewState]="isViewState"></comment>
+        </div>
+        <div *ngIf="validateMeetingStage()&&componentManager.committeeDiscussVisible" class="ui-g-12 ui-lg-12">
+            <committee-discuss #committeeDiscuss [sponsershipRequest]="sponsershipRequest"  [rcoLookup]="rcoLookup"></committee-discuss>
+        </div>
+        <div *ngIf="componentManager.assigneesVisible" class="ui-g-12 ui-lg-12">
+            <assignees #assigneesComponent [stageEnglishName]=" sponsershipRequest.stage?.nameEn"></assignees>
+        </div>
+      
+        
+
+
+
+        
+  <div  *ngIf="family.fatherMotherInRelation&&!isViewState"  class="ui-g-12 ui-lg-12">
+
+    <div class="ui-g form-group">
+
+      <div class="ui-g-12 ui-md-12">
+          <div class="actions-div">
+        <button pButton id="saveRequestBTN" class="requestActions" type="button" label="حفظ" (click)="saveRequest(true)"></button>
+        <button pButton *ngIf=" !appService.hasRole('ROLE_COMMITTEE_SECRETARY')" type="button"  label="ارسال" class="ui-button-warning requestActions" (click)="saveRequest(false)"></button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div *ngIf="isViewState" class="ui-g-12 ui-lg-12">
+
+    <div class="ui-g form-group">
+      <div class="ui-g-12 ui-md-12">
+        <div class="actions-div">
+          
+        <button *ngIf="!hideChangeRequestBTN()" pButton type="button" label="إعداد بلاغ وارد"></button>
+        <button pButton type="button" label="إغلاق" class="ui-button-warning" (click)="backClicked()"></button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>

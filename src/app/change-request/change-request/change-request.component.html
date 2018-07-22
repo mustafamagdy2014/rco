@@ -1,0 +1,50 @@
+<p-messages [(value)]="msgs"></p-messages>
+<!-- <p-growl [(value)]="growlMsgs"></p-growl> -->
+
+
+<div class="ui-g  ui-rtl" dir="rtl">
+  <div *ngIf="isSponsershipChangeRequest && sponsershipChangeRequest" class="ui-g-12 ui-lg-12">
+    <beneficiary-info *ngIf="isSponsershipChangeRequest && sponsershipChangeRequest" [applicantCpr]="beneficiaryCpr" [family]="family"></beneficiary-info>
+    <topic #dynamicForm [rcoLookup]="rcoLookup" [applicantCpr]="beneficiaryCpr" [family]="family" [sponsershipChangeRequest]="sponsershipChangeRequest"></topic>
+    <attachment *ngIf="isSponsershipChangeRequest && sponsershipChangeRequest" [isSponsershipChangeRequest]="isSponsershipChangeRequest" [sponsershipChangeRequest]="sponsershipChangeRequest"
+      [isViewState]="isViewState" [rcoLookup]="rcoLookup"></attachment>
+  </div>
+
+  <div class="ui-g-6 ui-lg-6">
+      <change-request-applicant [rcoLookup]="rcoLookup" [sponsershipChangeRequest]="sponsershipChangeRequest" [isViewState]="isViewState" (changeRequestApplicantInfoRetrievedEvent)="updateApplicantInfo($event)"></change-request-applicant>
+    </div>
+    <div *ngIf="isSponsershipChangeRequest && sponsershipChangeRequest && componentManager.visitScheduleVisible" class="ui-g-12 ui-lg-12">
+      <researcher-visit-change-request [sponsershipChangeRequest]="sponsershipChangeRequest" [rcoLookup]="rcoLookup"></researcher-visit-change-request>
+    </div>
+    <!-- <div class="ui-g-12 ui-lg-12"  *ngIf="isSponsershipChangeRequest && sponsershipChangeRequest && componentManager.visitScheduleVisible">
+      <researcher-recommendation [familyMembers]="family.familyMembers"></researcher-recommendation>
+    </div> -->
+
+  <div *ngIf="isSponsershipChangeRequest && sponsershipChangeRequest" class="ui-g-6 ui-lg-6">
+    <comment [isSponsershipChangeRequest]="isSponsershipChangeRequest" [sponsershipChangeRequest]="sponsershipChangeRequest"
+      [isViewState]="isViewState"></comment>
+  </div>
+
+<div class="ui-g-12 ui-lg-12"  *ngIf="taskId&&componentManager.assigneesVisible">
+   <assignees #assigneesComponent [stageEnglishName]="sponsershipChangeRequest?.stage.nameEn"></assignees>
+</div>
+
+<div class="ui-g-12 ui-lg-12"  *ngIf="taskId&&validateMeetingStage()&&componentManager.committeeDecisionVisible">
+  <committee-decision [sponsershipChangeRequest]="sponsershipChangeRequest" [topic]="dynamicForm?.topic"></committee-decision>
+</div>
+
+<div class="ui-g-12 ui-lg-12">
+
+    <div class="ui-g form-group">
+
+        <div class="ui-g-12 ui-md-12">
+          <div class="actions-div" >
+            <button pButton id="saveRequestBTN" [disabled]="!dynamicForm?.form.valid" class="requestActions" type="button" label="حفظ" (click)="saveRequest(true)"></button>
+            <button pButton type="button" *ngIf="dynamicForm?.showSendBTN" [disabled]="!dynamicForm?.form.valid" label="إرسال" class="ui-button-warning requestActions"
+              (click)="saveRequest(false)"></button>
+          </div>
+        </div>
+        </div>
+    
+    </div>
+</div>

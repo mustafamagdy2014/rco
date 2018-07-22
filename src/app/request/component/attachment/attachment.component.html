@@ -1,0 +1,100 @@
+<p-growl [(value)]="attachmentMessages"></p-growl>
+<p-growl [(value)]="confirmMsgs"></p-growl>
+<p-panel header="{{header}}" [toggleable]="true" [collapsed]="sponsershipRequest?.attachments.length==0 || sponsershipChangeRequest?.attachments.length==0">
+  <p-table [columns]="cols" *ngIf="sponsershipRequest" [value]="sponsershipRequest?.attachments" [paginator]="true" [rows]="15">
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData" class="txt-center">
+        <td>
+          {{rowData.attachmentType?.nameAr}}
+        </td>
+        <td>
+          <a (click)="download(rowData)">{{rowData.fileName}}</a>
+        </td>
+        <td>
+          {{rowData.fileSize}}
+        </td>
+        <td>
+          <i class="fa fa-trash-o" style="font-size:24px;color:red" (click)="deleteAttachment(rowData)"></i>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="summary" let-rowData>
+      <div>
+        <button type="button" pButton icon="fa-plus" (click)="showDialogToAdd()" label="أضف مرفق"></button>
+      </div>
+    </ng-template>
+
+  </p-table>
+
+  <p-table [columns]="cols" *ngIf="sponsershipChangeRequest" [value]="sponsershipChangeRequest?.attachments" [paginator]="true" [rows]="15">
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData" class="txt-center">
+        <td>
+          {{rowData.attachmentType?.nameAr}}
+        </td>
+        <td>
+          <a (click)="download(rowData)">{{rowData.fileName}}</a>
+        </td>
+        <td>
+          {{rowData.fileSize}}
+        </td>
+        <td>
+          <i class="fa fa-trash-o" style="font-size:24px;color:red" (click)="deleteAttachment(rowData)"></i>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="summary" let-rowData>
+      <div>
+        <button type="button" pButton icon="fa-plus" (click)="showDialogToAdd()" label="أضف مرفق"></button>
+      </div>
+    </ng-template>
+
+  </p-table>
+
+  <p-dialog header="أضافة مرفق" [contentStyle]="{'overflow':'visible'}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
+    [modal]="true" resizable="true" width="700">
+    <div class="ui-g ui-fluid" *ngIf="attachment">
+      <div class="ui-g-12">
+        <div class="ui-g-9">
+          <p-dropdown *ngIf="lookupRCOAttachment" [style]="{'width':'100%'}" [options]="lookupRCOAttachment" [(ngModel)]="attachment.attachmentType"
+            optionLabel="nameAr" [filter]="true" [autoWidth]="true" filterBy="value.nameAr"></p-dropdown>
+        </div>
+        <div class="ui-g-3">
+          <label for="vin">نوع المرفق</label>
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-9">
+          <p-fileUpload name="attachmentfile" mode="advanced" [showCancelButton]="false" accept="image/*" maxFileSize="1000000" (onBeforeSend)="onBeforeSend($event)"
+            url="{{getUploadUrl()}}" (onUpload)="onUploadFile($event)" chooseLabel="اختار ملف" uploadLabel="تحميل">
+
+          </p-fileUpload>
+        </div>
+        <div class="ui-g-3">
+          <label for="brand">المرفقات</label>
+        </div>
+      </div>
+    </div>
+  </p-dialog>
+  <p-confirmDialog header="Confirmation" acceptLabel="نعم" rejectLabel="لا" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+</p-panel>

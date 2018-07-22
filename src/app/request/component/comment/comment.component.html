@@ -1,0 +1,95 @@
+<p-growl [(value)]="commentMessages"></p-growl>
+
+<p-panel header="{{header}}" [toggleable]="true" [collapsed]="sponsershipChangeRequest?.sponsershipComments.length==0 || sponsershipRequest?.sponsershipComments.length==0">
+  <p-table id="main-container" *ngIf="sponsershipRequest?.sponsershipComments" [columns]="cols" [value]="sponsershipRequest.sponsershipComments"
+      selectionMode="single" [(selection)]="selectedComment" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
+
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData" class="txt-center">
+        <td>
+          {{rowData.createdBy}}
+
+        </td>
+        <td>
+          {{rowData.createdOn | date:'yyyy-MM-dd HH:mm'}}
+        </td>
+        <td>
+          {{rowData.comment}}
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="summary" let-rowData>
+      <div>
+        <button type="button" pButton icon="fa-plus" (click)="showDialogToAdd()" label="أضف ملاحظة"></button>
+      </div>
+    </ng-template>
+
+  </p-table>
+
+  <p-table *ngIf="sponsershipChangeRequest?.sponsershipComments" [columns]="cols" [value]="sponsershipChangeRequest.sponsershipComments"
+      selectionMode="single" [(selection)]="selectedComment" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
+
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData" class="txt-center">
+        <td>
+          {{rowData.createdBy}}
+
+        </td>
+        <td>
+          {{rowData.createdOn | date:'yyyy-MM-dd HH:mm'}}
+        </td>
+        <td>
+          {{rowData.comment}}
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="summary" let-rowData>
+      <div>
+        <button type="button" pButton icon="fa-plus" (click)="showDialogToAdd()" label="أضف ملاحظة"></button>
+      </div>
+    </ng-template>
+
+  </p-table>
+
+  <p-dialog header="أضافة ملاحظة" [contentStyle]="{'overflow':'visible'}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
+    [modal]="true" resizable="true" width="700">
+    <div class="ui-g ui-fluid" *ngIf="comment">
+      <div class="ui-g-12">
+        <div class="ui-g-9">
+          <textarea pInputTextarea [(ngModel)]="comment.comment" [rows]="5" [cols]="30" autoResize="autoResize"></textarea>
+        </div>
+        <div class="ui-g-3">
+          الملاحظة
+        </div>
+      </div>      
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa-close" (click)="delete()" label="{{!newComment?'مسح':'الغاء'}}"></button>
+            <button type="button" pButton icon="fa-check" (click)="save()" label="حفظ"></button>
+        </div>
+    </p-footer>
+  </p-dialog>
+</p-panel>

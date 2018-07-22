@@ -1,0 +1,84 @@
+<p-blockUI [blocked]="blockedWidowPanel" [target]="widowPnl">
+    <i class="fa fa-refresh fa-spin  fa-5x" style="position:absolute;top:25%;left:50%"></i>
+</p-blockUI>
+<p-panel id="widowPanel" header="{{header}}" [toggleable]="true" #widowPnl >
+    <p-messages [(value)]="msgs"></p-messages>
+    <div  class="ui-g form-group">
+        <div class="ui-g-12 ui-md-4">
+            <label>الرقم الشخصي</label>
+          </div>
+          <div class="ui-g-12 ui-md-8">
+              <p-inputMask [disabled]="isViewState||isUpdateState"  [(ngModel)]="mother.cpr" mask="999999999" autoClear="true" (onComplete)="getPersonCRS(mother.cpr)" placeholder="CPR"></p-inputMask>
+           
+          </div>
+      
+          <div class="ui-g-12 ui-md-4">
+            <label>الاسم</label>
+          </div>
+          <div class="ui-g-12 ui-md-8">
+            <input [disabled]="true" type="text" [(ngModel)]="mother.personArabicName" pInputText pKeyFilter="alpha" placeholder="">
+          </div>
+      
+          <div class="ui-g-12 ui-md-4">
+            <label> الحالة الاجتماعية</label>
+          </div>
+          <div class="ui-g-12 ui-md-8">
+            <input [disabled]="true" type="text" [value]="motherFamilyMember?.maritalStatusCodeName" pInputText placeholder="الحالة الاجتماعية">
+          </div>
+        </div>
+
+    <p-accordion >
+     
+        <p-accordionTab header="المزيد">
+            
+          <div  class="ui-g form-group">
+              <div class="ui-g-12 ui-md-4">
+                <label>المهنة</label>
+              </div>
+              <div class="ui-g-12 ui-md-8">
+                <input [disabled]="true" type="text" pInputText placeholder="المهنة" [(ngModel)]="mother.occupation">
+              </div>
+          
+              <div class="ui-g-12 ui-md-4">
+                <label>جهة العمل</label>
+              </div>
+              <div  class="ui-g-12 ui-md-8">
+                <input [disabled]="true" type="text" pInputText placeholder="جهة العمل" [(ngModel)]="mother.employer">
+              </div>
+          
+              <div  class="ui-g-12 ui-md-4">
+                <label>هاتف الرسائل</label>
+              </div>
+              <div class="ui-g-12 ui-md-8">
+                  <p-inputMask mask="99999999"  [disabled]="isViewState" #mobilesms="ngModel" [(ngModel)]="motherFamilyMember.contact.mobilesms" placeholder="99999999"></p-inputMask>
+               <!-- <input [disabled]="isViewState" type="text" pInputText placeholder="هاتف الرسائل" [(ngModel)]="mother.mobile1SMS"> -->
+              </div>
+          
+              <div class="ui-g-12 ui-md-4">
+                <label>الهاتف النقال</label>
+              </div>
+              <div class="ui-g-12 ui-md-8">
+                  <p-inputMask mask="99999999"  [disabled]="isViewState" #mobile="ngModel" [(ngModel)]="motherFamilyMember.contact.mobile" placeholder="99999999"></p-inputMask>
+              <!--  <input [disabled]="isViewState" type="text" pInputText placeholder="الهاتف النقال" [(ngModel)]="mother.mobile2"> -->
+              </div>
+          
+              <div class="ui-g-12 ui-md-4">
+                <label>هاتف المنزل </label>
+              </div>
+              <div class="ui-g-12 ui-md-8">
+                <input [disabled]="isViewState" type="text" pInputText #homeTel="ngModel" [(ngModel)]="motherFamilyMember.contact.homeTel" placeholder="هاتف المنزل">
+              </div>
+         
+              
+            </div>
+            <div class="ui-g" style="width:250px;margin-bottom:10px"> 
+                <div class="ui-g-12"><p-checkbox *ngIf="!isViewState&&!isUpdateState&&family.fatherMotherInRelation" #nxOfKn label="ولي الامر"(onChange)="widowAsNextOfKinChecked($event)"></p-checkbox></div>
+                <div class="ui-g-12"><p-checkbox *ngIf="!isViewState&&!isUpdateState&&family.fatherMotherInRelation"  value="sponsor" label="كفيل" [(ngModel)]="checkboxValues" ></p-checkbox></div>
+                <div class="ui-g-12"><p-checkbox *ngIf="!isViewState&&!isUpdateState&&family.fatherMotherInRelation"  value="applicant" label="مقدم الطلب" [(ngModel)]="checkboxValues" (onChange)="widowAsApplicantChecked($event)"></p-checkbox></div>
+          </div>
+    
+        </p-accordionTab>
+    </p-accordion>
+
+ 
+</p-panel>

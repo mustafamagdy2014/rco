@@ -1,0 +1,63 @@
+<p-panel header="{{header}}" [toggleable]="true">
+  <div class="ui-g">
+    <div class="ui-g-12 ui-lg-12">
+      <div class="card ui-rtl" dir="rtl">
+
+        <p-table [value]="sponsershipRequest?.family.familyMembers" [resizableColumns]="true" [autoLayout]="true" [rows]="10" [paginator]="true"
+          [style]="{'text-align': 'center'}" #dt emptyMessage="لايوجد بيانات" ng-hide="loading">
+          <ng-template pTemplate="header">
+            <tr>
+              <th pResizableColumn>الرقم الشخصي</th>
+              <th pResizableColumn>الاسم</th>
+              <th pResizableColumn>حالة الفرد</th>
+              <th pResizableColumn>نوع الفرد</th>
+              <th pResizableColumn>التوصية</th>
+              <th pResizableColumn>السبب</th>
+              <th pResizableColumn>عدد الشهور</th>
+              <th pResizableColumn>الاستحقاق</th>
+              <th pResizableColumn>المبلغ</th>
+
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr [hidden]="rowData.familyRelationCode.code === 'FATHER'?true:false">
+              <td class="ui-resizable-column">{{rowData.cpr}}</td>
+              <td class="ui-resizable-column">{{rowData.personArabicName}}</td>
+              <td class="ui-resizable-column">{{rowData.beneficiaryStatus.nameAr}}</td>
+              <td class="ui-resizable-column"> {{rowData.familyRelationCode.nameAr}}</td>
+              <td class="ui-resizable-column" *ngIf="rowData.recommendation" >{{rowData.recommendation.recommended? 'يوصى به':'لا يوصى به'}}</td>
+              <td class="ui-resizable-column" *ngIf="!rowData.recommendation" ></td>
+              <td class="ui-resizable-column">{{rowData.recommendation?.reason}}</td>
+              <td class="ui-resizable-column">
+                <p-dropdown [style]="{'width':'100%'}" appendTo="body" [options]="numberOfMonthes" (onChange)="numberOfMonthesChanged($event,rowData)" [(ngModel)]="rowData.committeeDecision.numberOfMonthes"></p-dropdown>
+              </td>
+              <td class="ui-resizable-column">
+                <p-dropdown appendTo="body" [style]="{'width':'100%'}"  placeholder=" click " [options]="decisions" (onChange)="decisionChnaged($event,rowData)" [autoWidth]="false" optionLabel="nameAr"
+                  [(ngModel)]="rowData.committeeDecision.decision" placeholder=""></p-dropdown>
+              </td>
+              <td class="ui-resizable-column">
+                <p-dropdown [disabled]="rowData.committeeDecision.decision.id==2?true:false" [style]="{'width':'200px'}"  appendTo="body" [options]="amount" [(ngModel)]="rowData.committeeDecision.amount" editable="true" placeholder="أدخل المبلغ" ></p-dropdown>
+                
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+      </div>
+
+      <div class="ui-g-12 ui-lg-12">
+        <h3> تحديد تاريخ الصرف*</h3>
+        <div class="ui-inputgroup">
+          <span class="ui-inputgroup-addon"><i class="fa fa-calendar"></i></span>
+          <p-calendar appendTo="body" [(ngModel)]="startDate" [minDate]="minDateValue"  showButtonBar="true" dateFormat="yy, MM dd"></p-calendar>
+        </div>
+      </div>
+      <div class="ui-g-12 ui-lg-12">
+        <h3>رأي اللجنة</h3>
+        <textarea pInputTextarea [(ngModel)]="comment" [rows]="5" [cols]="30" autoResize="autoResize" style="width: 90%"></textarea>
+      <!--   <button type="button" class="ui-button-info" pButton label="أضافة" icon="fa fa-floppy-o" iconPos="left" (click)="save()"
+          [disabled]="commit?.length === 0"></button> -->
+      </div>
+    </div>
+  </div>
+</p-panel>

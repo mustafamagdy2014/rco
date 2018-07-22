@@ -1,0 +1,105 @@
+<p-panel header="{{header}}" [toggleable]="true" [collapsed]="family?.familyMembers.length==0">
+  <p-table [columns]="cols" [value]="family?.familyMembers" [resizableColumns]="true" [autoLayout]="true">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" pResizableColumn>
+          {{col.header}}
+        </th>
+      </tr>
+
+    </ng-template>
+
+    <ng-template #con pTemplate="body" let-rowData >
+
+      <tr [pSelectableRow]="rowData" [ngClass]="'txt-center'" [hidden]="rowData.familyRelationCode.code === 'FATHER'?true:false" *ngIf="maritalStatus">
+        <td  class="ui-resizable-column">
+          <a (click)="openViewPersonInfo(rowData)">{{rowData.cpr}}</a>
+          
+        </td>
+        <td  class="ui-resizable-column">
+          {{rowData.personArabicName}}
+        </td>
+        <td  class="ui-resizable-column">
+          {{rowData.maritalStatusCodeName || rowData.familyRelationCode.nameAr}}
+        </td>
+        <td  class="ui-resizable-column" >
+          <p-dropdown appendTo="body" [style]="{'width':'100%'}" *ngIf="family" [options]="family.nextOfKins" [autoWidth]="false" optionLabel="personArabicName" [(ngModel)]="rowData.nextOfKin"
+            placeholder="اختار ولي الامر"></p-dropdown>
+        </td>
+        <td  class="ui-resizable-column"> 
+          <p-dropdown appendTo="body" [style]="{'width':'100%'}" *ngIf="family" [options]="family.sponsers" [autoWidth]="false" optionLabel="personArabicName" [(ngModel)]="rowData.sponser"
+            placeholder="اختار الكفيل"></p-dropdown>
+        </td>
+        <td  class="ui-resizable-column">
+          <p-dropdown appendTo="body" [style]="{'width':'100%'}" *ngIf="rowData.sponser" [options]="rowData.sponser.accounts" [autoWidth]="false" optionLabel="bank.nameAr" [(ngModel)]="rowData.account"
+            placeholder="اختار البنك"></p-dropdown>
+        </td>
+        <td  class="ui-resizable-column">{{rowData.account?.accountNo}}</td>
+       
+        <td  class="ui-resizable-column">
+          <button *ngIf="rowData.rejectionReasons.length != 0" type="button" pButton icon="fa-times" (click)="showDialog(rowData)"></button>
+          <i *ngIf="rowData.rejectionReasons.length == 0" class="fa fa-check" aria-hidden="true"></i>
+        </td>
+
+      </tr>
+    </ng-template>
+  </p-table>
+  <p-dialog header="التفاصيل" [(visible)]="display" modal="modal" [responsive]="true" [width]="600" [minWidth]="200" >
+
+    <div *ngIf="familyMemberCRS" class="ui-g form-group">
+      <div class="ui-g-12 ui-md-4">
+        <label>حالة التواجد: </label>
+      </div>
+      <div class="ui-g-12 ui-md-8">
+        <div>{{familyMemberCRS.isAlive? "قيد الحياة":"متوفي"}}</div>
+      </div>
+      <div class="ui-g-12 ui-md-4">
+        <label>الجنسية : </label>
+      </div>
+      <div class="ui-g-12 ui-md-8">
+        <div>{{familyMemberCRS.isBahraini? "بحريني":"غير بحريني"}}</div>
+      </div>
+      <div class="ui-g-12 ui-md-4">
+        <label>الجنس :</label>
+      </div>
+      <div class="ui-g-12 ui-md-8">
+        <div>{{familyMemberCRS.genderString}}</div>
+      </div>
+      <div class="ui-g-12 ui-md-4">
+        <label>العمر :</label>
+      </div>
+      <div class="ui-g-12 ui-md-8">
+        <div>{{familyMemberCRS.age}}</div>
+      </div>
+      <div class="ui-g-12 ui-md-4">
+        <label>الحالة الاجتماعية :</label>
+      </div>
+      <div class="ui-g-12 ui-md-4">
+        <div>{{familyMemberCRS.maritalStatusCodeName || familyMemberCRS.maritalStatus}}</div>
+      </div>
+      <div class="ui-g-12 ui-md-2">
+        <label>يوجد ابناء :</label>
+      </div>
+      <div class="ui-g-12 ui-md-2">
+        <div>{{haveChildern?"نعم":"لا"}}</div>
+      </div>
+      <div class="ui-g-12 ui-md-4">
+        <label>الحالة الوظيفية :</label>
+      </div>
+      <div class="ui-g-12 ui-md-8">
+        <div>{{familyMemberCRS.occupation?"موظف":"غير معروفة"}}</div>
+      </div>
+      <div *ngIf="familyMemberCRS.rejectionReasons.length > 0">
+        <p style="color:red;">تم رفض اليتيم/اليتيمة للتفاصيل المذكورة.</p>
+        <li *ngFor="let msg of familyMemberCRS.rejectionReasons" style="color:red;">
+          {{msg}}
+        </li>
+      </div>
+
+    </div>
+    <p-footer>
+      <button type="button" pButton icon="fa-close" (click)="display=false" label="إلغاء"></button>
+    </p-footer>
+  </p-dialog>
+  <p-messages [(value)]="msgs"></p-messages>
+</p-panel>

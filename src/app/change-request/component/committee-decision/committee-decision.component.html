@@ -1,0 +1,38 @@
+<p-panel header="{{header}}" [toggleable]="true">
+  <div class="ui-g">
+    <div class="ui-g-12">
+     
+        <div class="ui-g-6">
+           
+          </div>
+        
+      <div class="ui-g-1" *ngIf="topic?.id!=6">
+        <div class="ui-inputgroup">
+          <span class="ui-inputgroup-addon">
+            <i class="fa fa-calendar"></i>
+          </span>
+          <p-calendar appendTo="body" [(ngModel)]="sponsershipChangeRequest?.committeeDecision.startDate" [minDate]="minDateValue" showButtonBar="true" dateFormat="yy, MM dd"></p-calendar>
+        </div>
+      </div>
+      <div class="ui-g-1 txt-left" *ngIf="topic?.id!=6">
+        <label>تاريخ {{topic?.nameAr}}:</label>
+      </div>
+    
+      <div class="ui-g-3">
+          <p-dropdown [style]="{'width':'100%'}"  [(ngModel)]="sponsershipChangeRequest?.committeeDecision.decision" [options]="topic?.decisions" optionLabel="nameAr" ></p-dropdown>
+        </div>
+        <div class="ui-g-1 txt-left">
+          <label>قرار اللجنة:</label>
+        </div>
+  
+    </div>
+    <div class="ui-g-12">
+        <div class="ui-g-11">
+            <textarea pInputTextarea [(ngModel)]="sponsershipChangeRequest?.committeeDecision.notes" [rows]="5" [cols]="30" autoResize="autoResize" style="width: 100%"></textarea>
+          </div>
+          <div class="ui-g-1 txt-left">
+            <label>رأي اللجنة:</label>
+          </div>
+    </div>
+  </div>
+</p-panel>

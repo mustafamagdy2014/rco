@@ -1,0 +1,54 @@
+<p-blockUI [blocked]="blockedApplicantPanel" [target]="applicantPnl">
+  <i class="fa fa-refresh fa-spin  fa-5x" style="position:absolute;top:25%;left:50%"></i>
+</p-blockUI>
+<p-panel id="applicantPanel" header="{{header}}" [toggleable]="true" #applicantPnl>
+  <p-messages [(value)]="msgs"></p-messages>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-2">
+      <label>الرقم الشخصي</label>
+    </div>
+    <div class="ui-g-12 ui-md-10">
+      <p-inputMask [disabled]="isViewState||isUpdateState||disableCpr" [(ngModel)]="applicant.cpr" mask="999999999" (onComplete)="getPersonCRS(applicant.cpr)"
+        placeholder="CPR" (paste)="false"></p-inputMask>
+
+    </div>
+
+    <div class="ui-g-12 ui-md-2">
+      <label>الاسم</label>
+    </div>
+    <div class="ui-g-12 ui-md-10">
+      <input size="30" [disabled]="true" type="text" [(ngModel)]="applicant.personArabicName" pInputText pKeyFilter="alpha" placeholder="">
+    </div>
+
+    <div class="ui-g-12 ui-md-2">
+      <label>صلة القرابة</label>
+    </div>
+    <div class="ui-g-12 ui-md-10">
+      <input size="30" type="text" [(ngModel)]="applicant.relativeRelation" pInputText pKeyFilter="alpha" placeholder="">
+    </div>
+
+    <div class="ui-g-12 ui-md-2">
+      <label>هاتف الرسائل</label>
+    </div>
+    <div class="ui-g-12 ui-md-10">
+      <p-inputMask mask="99999999" [disabled]="isViewState" [(ngModel)]="applicant.contact.mobilesms" placeholder="99999999"></p-inputMask>
+    </div>
+
+    <div class="ui-g-12 ui-md-2">
+      <label>الهاتف النقال</label>
+    </div>
+    <div class="ui-g-12 ui-md-10">
+      <p-inputMask mask="99999999" [disabled]="isViewState" [(ngModel)]="applicant.contact.mobile" placeholder="99999999"></p-inputMask>
+    </div>
+
+    <div class="ui-g-12 ui-md-2">
+      <label>طريقة استلام البلاغ</label>
+    </div>
+
+    <div class="ui-g-12 ui-md-10">
+      <p-dropdown [style]="{'width':'100%'}" [options]="rcoLookup['CHANGE_REQUEST_CHANNEL']" [(ngModel)]="applicant.requestChannel"
+        optionLabel="nameAr" [filter]="false" [autoWidth]="true" filterBy="value.nameAr"></p-dropdown>
+    </div>
+
+  </div>
+</p-panel>

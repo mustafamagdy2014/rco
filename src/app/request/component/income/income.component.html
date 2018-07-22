@@ -1,0 +1,133 @@
+<p-growl [(value)]="incomeMessages"></p-growl>
+<p-confirmDialog  icon="fa fa-question-circle" width="425"></p-confirmDialog>
+
+<p-panel  header="{{header}}" [toggleable]="true" [collapsed]="family?.incomes.length==0">
+<p-table [columns]="cols" [value]="family?.incomes" selectionMode="single" [(selection)]="selectedIncome" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
+ 
+ 
+  <ng-template pTemplate="header" let-columns>
+      <tr>
+          <th *ngFor="let col of columns">
+              {{col.header}}
+          </th>
+      </tr>
+  </ng-template>
+
+
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData" class="txt-center">
+          <td >
+            {{rowData.incomeType?.nameAr}}
+           
+          </td>
+          <td >
+            {{rowData.incomeAmount |currency:' BD ':'symbol':'1.3'}}
+        </td>
+        <td class="attachmentName">
+           <!--  <img [src]="rowData.attachment?.thumbnail"> -->
+           {{rowData.incomeAttachment?.fileName}}
+      </td>
+      </tr>
+  </ng-template>
+
+
+
+
+
+
+
+
+
+
+  <ng-template pTemplate="summary" let-rowData *ngIf="!isViewState">
+      <div>
+          <button type="button" pButton icon="fa-plus" (click)="showDialogToAdd()" label="أضف دخل"></button>
+      </div>
+  </ng-template>
+  
+</p-table>
+
+<p-dialog header="تفاصيل الدخل" [contentStyle]="{'overflow':'visible'}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" resizable="true" width="700">
+  <div class="ui-g ui-fluid" *ngIf="income" >
+      <div class="ui-g-12">
+          <div class="ui-g-8">
+              <p-dropdown   [style]="{'width':'100%'}" [options]="rcoLookup['INCOME_TYPE']" [(ngModel)]="income.incomeType" optionLabel="nameAr"  [filter]="true" [autoWidth]="true" filterBy="value.nameAr"></p-dropdown> 
+            </div>
+          <div class="ui-g-4">
+              <label for="vin">نوع الدخل</label>
+          </div>
+          
+      </div>
+      <div class="ui-g-12">
+          <div class="ui-g-8">
+            
+              <input pInputText  type="text" [(ngModel)]="income.incomeAmount" pKeyFilter="pnum" >
+          </div>
+          <div class="ui-g-4">
+              <label for="year">القيمة</label>
+          </div>
+         
+      </div>
+      <div class="ui-g-12" *ngIf="!income.incomeAttachment">
+          <div class="ui-g-8 attachmentName">
+           
+              <p-fileUpload #incomeUploader name="incomeAttachment" mode="advanced" (onBeforeSend)="updateUploadRequest($event)" (onUpload)=" IncomeUploadHandler($event)" url="{{uploadURL}}" [showUploadButton]="false" [chooseLabel]="'أضف الملف'" [showCancelButton]="false" maxFileSize="1000000">
+                
+              </p-fileUpload>
+
+            </div>
+            
+          <div class="ui-g-4">
+              <label>المرفقات</label>
+          </div>
+         
+      </div>
+
+    <div class="ui-g-12" *ngIf="income.incomeAttachment">
+        <div class="ui-g-4">
+            <i class="fa fa-trash-o" style="font-size:24px;color:red" (click)="deleteAttachment(income)"></i>
+        </div>
+
+        <div class="ui-g-4">
+            <a (click)="downloadAttachment(income.incomeAttachment)">{{income.incomeAttachment.fileName}}</a>
+        </div>
+    
+        <div class="ui-g-4">
+            <label>اسم المرفق</label>
+        </div>
+    
+    </div>
+
+    
+     
+  </div>
+  <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+          <button type="button" pButton icon="fa-close" (click)="delete()" label="{{!newIncome?'مسح':'إلغاء'}}"></button>
+          <button type="button" pButton icon="fa-check" (click)="customSave()" label="حفظ"></button>
+      </div>
+  </p-footer>
+</p-dialog>
+
+<!-- <p-dialog header="تفاصيل المرفق" [contentStyle]="{'overflow':'visible'}" [(visible)]="displayAttachmentDialog" [responsive]="true" showEffect="fade" [modal]="true" resizable="true" width="700">
+        <div class="ui-g ui-fluid" *ngIf="income" >
+            <div class="ui-g-12">
+                <div class="ui-g-8">
+                  
+                    <input pInputText  type="text" [(ngModel)]="income.incomeAmount" pKeyFilter="pnum" >
+                </div>
+                <div class="ui-g-4">
+                    <label for="year">القيمة</label>
+                </div>
+               
+            </div>
+        </div>
+      </p-dialog> -->
+
+</p-panel>
+
+
+
+
+
+  

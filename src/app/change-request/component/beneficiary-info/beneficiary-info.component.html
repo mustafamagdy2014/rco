@@ -1,0 +1,66 @@
+<p-blockUI [blocked]="blockedOrphanPanel" [target]="orphanPnl">
+  <i class="fa fa-refresh fa-spin  fa-5x" style="position:absolute;top:25%;left:50%"></i>
+</p-blockUI>
+
+<p-panel header="{{header}}" [toggleable]="true" #orphanPnl  >
+<div class="ui-g orphanPanel">
+  <div class="ui-g-12 ui-lg-1">
+    <label>الرقم الشخصي</label>
+  </div>
+  <div class="ui-g-12 ui-lg-1">
+    <input [disabled]="true" [value]="beneficiary.cpr" type="text" pInputText pKeyFilter="pint" placeholder="CPR">
+  </div>
+
+  <div class="ui-g-12 ui-lg-1">
+    <label>الاسم</label>
+  </div>
+  <div class="ui-g-12 ui-lg-2">
+    <input [disabled]="true" [value]="beneficiary.personArabicName" type="text" pInputText pKeyFilter="alpha" placeholder="">
+  </div>
+
+  <div class="ui-g-12 ui-lg-1">
+    <label> الحالة الاجتماعية</label>
+  </div>
+  <div class="ui-g-12 ui-lg-1">
+    <input [disabled]="true" [value]="beneficiary.maritalStatus" type="text" pInputText placeholder="">
+  </div>
+
+  <div class="ui-g-12 ui-lg-1">
+    <label>تاريخ الميلاد</label>
+  </div>
+  <div class="ui-g-12 ui-lg-1">
+    <input [disabled]="true" [ngModel]="beneficiary.birthDate | date: 'yyyy-MM-dd'" type="text" pInputText placeholder="">
+  </div>
+
+  <div class="ui-g-12 ui-lg-1">
+    <label>العمر</label>
+  </div>
+  <div class="ui-g-12 ui-lg-1 ui-md-offset-1">
+    <input [disabled]="true" [value]="beneficiary.age" type="text" pInputText placeholder="">
+  </div>
+
+  <div class="ui-g-12 ui-lg-1">
+    <label>الجنس</label>
+  </div>
+  <div class="ui-g-12 ui-lg-1">
+    <input [disabled]="true" [value]="beneficiary.genderString" type="text" pInputText placeholder="">
+  </div>
+
+  <div class="ui-g-12 ui-md-1">
+    <label>حالة الفرد</label>
+  </div>
+  <div class="ui-g-12 ui-md-2">
+    <input [disabled]="true" [value]="familyMember?.beneficiaryStatus.nameAr"  type="text" pInputText placeholder="">
+  </div>
+
+  <div class="ui-g-12 ui-md-1">
+    <label>رقم الاسرة</label>
+  </div>
+  <div class="ui-g-12 ui-lg-1">
+      <a (click)="openFamilyMembersView()">{{family.id}}</a>
+<!--       <input [disabled]="true" [value]="applicant?.familyId" type="text" pInputText placeholder="">
+-->
+  </div>
+
+</div>
+</p-panel>

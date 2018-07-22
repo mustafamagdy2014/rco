@@ -1,0 +1,23 @@
+.txt-center td {
+  text-align: center;
+}
+a{
+  text-decoration: underline;
+  cursor: pointer;
+
+}
+a:link {
+  color: blue;
+}
+
+
+/* mouse over link */
+a:hover {
+  color: blue;
+}
+
+/* selected link */
+a:active {
+  color: blue;
+  
+}

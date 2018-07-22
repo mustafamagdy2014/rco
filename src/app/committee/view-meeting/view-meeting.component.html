@@ -1,0 +1,22 @@
+<p-growl [(value)]="msgs" [life]=6000></p-growl>
+<div class="ui-g">
+  <div class="ui-g-12 ui-lg-12">
+    <h3>تاريخ الاجتماع </h3>
+    <p-calendar *ngIf="!meeting" [(ngModel)]="meetingDate" [minDate]="minDateValue" [showIcon]="true" showButtonBar="true" dateFormat="yy, MM dd"></p-calendar>
+    <p-calendar *ngIf="meeting" [disabled]="!(meeting?.committeeMeetingStatus.code.localeCompare('1') === 0 )" [(ngModel)]="meeting.meetingDate"
+      [minDate]="minDateValue" [showIcon]="true" showButtonBar="true" dateFormat="yy, MM dd"></p-calendar>
+  </div>
+</div>
+<task-list *ngIf="tasks" [sponsorshipTaskWrapper]="tasks" ></task-list>
+
+<br>
+<div style="text-align:left">
+  <button type="button" class="ui-button-warning" pButton label="رجوع" icon="fa fa-undo" iconPos="left" (click)="cancel()"></button>
+  &nbsp;
+  <button type="button" class="ui-button-danger" pButton label="حذف" icon="fa fa-trash-o" iconPos="left" (click)="deleteMeeting()"
+    [disabled]="!meetingDate || !(meeting?.committeeMeetingStatus.code.localeCompare('1') === 0 )"></button>
+  &nbsp;
+  <button type="button" class="ui-button-success" pButton label="حفظ" icon="fa fa-floppy-o" iconPos="left" (click)="saveMeeting()"
+    [disabled]="!meetingDate"></button>
+</div>
+<p-confirmDialog header="Confirmation" acceptLabel="نعم" rejectLabel="لا" icon="fa fa-question-circle" width="425"></p-confirmDialog>

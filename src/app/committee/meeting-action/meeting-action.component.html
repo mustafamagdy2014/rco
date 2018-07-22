@@ -1,0 +1,45 @@
+<p-growl [(value)]="msgs"></p-growl>
+
+<div class="ui-g ui-rtl" dir="rtl">
+
+  <div class="ui-g-12">
+    <div class="ui-inputgroup">
+      <label for="meetingdate">تاريخ الاجتماع : </label>
+
+      <input id="meetingdate" style="text-align: center;opacity: 1;font-weight: bold;" type="text" value="{{meeting?.meetingDate | date}}"
+        pInputText placeholder="" disabled>
+    </div>
+  </div>
+
+  <div class="ui-g-12">
+    <div class="ui-inputgroup">
+      <label for="sn">رقم التسلسل : </label>
+
+      <input id="meetingdate" style="text-align: center;opacity: 1;font-weight: bold;" type="text" value="{{meeting?.id}}\{{meeting?.meetingDate | date: 'yyyy' }}"
+        pInputText placeholder="" disabled>
+    </div>
+  </div>
+  <div class="ui-g-12">
+    <span style="font-size: 1.5rem">قائمة الحضور من أعضاء اللجنة:</span>
+  </div>
+  <div class="ui-g-12">
+    <div class="ui-g-6" *ngFor="let member of meeting?.committeeMember">
+      <div class="ui-g-6">
+        <span style="text-decoration:underline">
+          {{member.position}}
+        </span> -
+        <span style="text-decoration:underline">
+          {{member.nameAr}}
+        </span>
+      </div>
+    </div>
+  </div>
+  <hr class="ui-g-12" style=" border-width: 1px;padding: 0">
+  <div class="ui-g-12">
+      <task-list *ngIf="tasks" [sponsorshipTaskWrapper]="tasks" ></task-list>
+  </div>
+
+  <div class="ui-g-12" dir="ltr">
+      <button pButton type="button" label="انهاء الاجتماع" class="ui-button-success" icon="fa fa-hourglass-end" (click)="endCommitteeMeeting()" ></button>
+  </div>
+</div>

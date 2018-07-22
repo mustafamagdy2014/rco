@@ -1,0 +1,26 @@
+<p-panel  header="{{header}}" [toggleable]="true">
+ <div class="ui-g">
+    <div class="ui-g-1">رقم الأسرة</div>
+    <div class="ui-g-1">
+      <input type="text" pInputText [disabled]="true" [value]="sponsershipRequest.family.id"/>
+    </div>
+    <div class="ui-g-1">تاريخ الإنشاء</div>
+    <div class="ui-g-1">
+      <input type="text" pInputText [disabled]="true" [value]="sponsershipRequest.createdOn"/>
+    </div>
+ 
+  
+    <div class="ui-g-1">رقم الطلب</div>
+    <div class="ui-g-1">
+      <input type="text" pInputText [disabled]="true" [value]="sponsershipRequest.id"/>
+    </div>
+    <div class="ui-g-1">حالة الطلب</div>
+    <div class="ui-g-1">
+      <input type="text" pInputText [disabled]="true" [value]="sponsershipRequest.status?.nameAr"/>
+    </div>
+    <div class="ui-g-1">مرحلة الطلب</div>
+    <div class="ui-g-2">
+      <input type="text" pInputText  [disabled]="true" [value]="sponsershipRequest.stage?.nameAr"/>
+    </div>
+  </div>
+</p-panel>

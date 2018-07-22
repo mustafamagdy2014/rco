@@ -1,0 +1,60 @@
+/* You can add global styles to this file, and also import other style files */
+@import url(//fonts.googleapis.com/css?family=Droid+Arabic+Kufi);
+label{
+    font-family: 'Droid Arabic Kufi' !important ;
+  }
+  span{
+    font-family: 'Droid Arabic Kufi' ;
+  }
+  body .ui-widget{
+    font-family: 'Droid Arabic Kufi' !important ;
+  }
+  .arabic{
+    font-family: 'Droid Arabic Kufi' ;
+  }
+
+  .ui-messages{
+    direction: rtl;
+  }
+
+  .ui-growl {
+    z-index:99999999999 !important;
+ }
+
+ .exception-body .exception-panel{
+   position: relative !important;
+   margin-top: 0 !important;
+ }
+ .exception-body.notfound {
+  background-image: none !important;
+}
+.layout-wrapper .layout-sidebar .sidebar-logo .app-name{
+  font-size: 22px !important;
+}
+.ui-dropdown-item{
+  text-align: right !important;
+}
+
+.error-msg{
+  color: red;
+  font-weight: bold;
+  font-family:  'Droid Arabic Kufi' !important ;
+}
+input{
+  font-family: 'Droid Arabic Kufi' ;
+
+}
+.actions-div{
+  width: 54%;
+  text-align: left;
+}
+.txt-center{
+  text-align: center;
+}
+
+.ui-calendar input{
+  text-align: center!important;
+}
+.txt-left{
+  text-align: left;
+}
